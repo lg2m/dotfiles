@@ -4,11 +4,8 @@
   libxkbcommon,
 }:
 
-stremio-linux-shell.overrideAttrs (_: {
-  postPatch = ''
-    substituteInPlace src/config.rs \
-      --replace-fail "@serverjs@" "${placeholder "out"}/share/stremio/server.js"
-
+stremio-linux-shell.overrideAttrs (oldAttrs: {
+  postPatch = (oldAttrs.postPatch or "") + ''
     for file in $cargoDepsCopy/libappindicator-sys-*/src/lib.rs; do
       if [ ! -e "$file" ]; then
         break
