@@ -1,0 +1,5 @@
+.ssh/hosts.d/
+.ssh/config.private
+result
+opencode.json
+.opencode/

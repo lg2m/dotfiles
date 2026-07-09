@@ -1,0 +1,371 @@
+// --------------------------------------------------
+// Rose Pine palette
+// --------------------------------------------------
+$base: #191724;
+$surface: #1f1d2e;
+$overlay: #26233a;
+$muted: #6e6a86;
+$subtle: #908caa;
+$text: #e0def4;
+$rose: #eb6f92;
+$pine: #31748f;
+$gold: #f6c177;
+$foam: #9ccfd8;
+$iris: #c4a7e7;
+$rose-light: #ebbcba;
+$highlight: #403d52;
+
+// --------------------------------------------------
+// Derived surfaces
+// --------------------------------------------------
+$bg-main: rgba($base, 0.88);
+$bg-panel: rgba($surface, 0.82);
+$bg-panel-strong: rgba($overlay, 0.92);
+$bg-soft: rgba($overlay, 0.55);
+
+$border-subtle: rgba($text, 0.05);
+
+$shadow-lg: 0 14px 40px rgba($base, 0.52);
+$shadow-sm: 0 4px 12px rgba($base, 0.18);
+
+$glow-pine: 0 0 0 1px rgba($pine, 0.18), 0 8px 24px rgba($pine, 0.16);
+$glow-iris: 0 0 0 1px rgba($iris, 0.14), 0 8px 24px rgba($iris, 0.12);
+
+$radius-xl: 22px;
+$radius-lg: 16px;
+$radius-md: 12px;
+$radius-pill: 999px;
+
+// --------------------------------------------------
+// Base reset
+// --------------------------------------------------
+* {
+  all: unset;
+  font-family: "Maple Mono NF", "JetBrainsMono Nerd Font", monospace;
+  font-size: 13px;
+  color: $text;
+}
+
+window {
+  background: transparent;
+}
+
+// --------------------------------------------------
+// Top-level shell
+// --------------------------------------------------
+.bar-shell {
+  margin: 10px 14px 6px 14px;
+  padding: 8px 10px;
+  border-radius: $radius-xl;
+  border: 1px solid $border-subtle;
+  background: linear-gradient(180deg,
+      rgba($surface, 0.86) 0%,
+      rgba($base, 0.92) 100%);
+  box-shadow:
+    $shadow-lg,
+    inset 0 1px 0 rgba($text, 0.05),
+    inset 0 -1px 0 rgba($base, 0.45);
+}
+
+// Do not force every group to reserve lots of space.
+.bar-group {
+  min-width: 0;
+}
+
+.left-cluster,
+.center-cluster,
+.right-cluster,
+.center-stack {
+  min-width: 0;
+}
+
+.center-cluster {
+  margin: 0 12px;
+}
+
+// Utility classes for layout safety
+.group-tight {
+  min-width: 0;
+}
+
+.group-grow {
+  min-width: 0;
+}
+
+.group-fixed {
+  min-width: 0;
+}
+
+// --------------------------------------------------
+// Shared container blocks
+// --------------------------------------------------
+.workspace-strip,
+.launcher-row,
+.session-row,
+.stats-row,
+.music-row,
+.clock-wrap,
+.title-box,
+.git-pill {
+  padding: 3px;
+  margin: 0 4px;
+  border-radius: $radius-lg;
+  border: 1px solid $border-subtle;
+  background: linear-gradient(180deg,
+      rgba($overlay, 0.68) 0%,
+      rgba($surface, 0.76) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba($text, 0.03),
+    $shadow-sm;
+}
+
+// --------------------------------------------------
+// Workspaces
+// --------------------------------------------------
+.workspace-strip {
+  padding: 4px;
+}
+
+.ws {
+  min-width: 24px;
+  margin: 0 2px;
+  padding: 6px 0;
+  border-radius: $radius-md;
+  background: transparent;
+  color: $muted;
+  font-size: 11px;
+  font-weight: 800;
+  transition: 160ms ease;
+}
+
+.ws:hover,
+.ws:focus {
+  background: rgba($foam, 0.10);
+  color: $foam;
+  box-shadow: inset 0 0 0 1px rgba($foam, 0.10);
+}
+
+.ws.active {
+  background: linear-gradient(180deg,
+      rgba($foam, 0.92) 0%,
+      rgba($pine, 0.88) 100%);
+  color: $base;
+  box-shadow:
+    0 8px 18px rgba($pine, 0.28),
+    inset 0 1px 0 rgba($text, 0.22);
+}
+
+.ws.occupied {
+  color: $text;
+}
+
+.ws.empty {
+  color: rgba($subtle, 0.75);
+}
+
+// --------------------------------------------------
+// Launcher / session buttons
+// --------------------------------------------------
+.launcher-row,
+.session-row {
+  padding: 4px;
+}
+
+.launch,
+.session {
+  margin: 0 2px;
+  padding: 6px 10px;
+  border-radius: $radius-md;
+  background: transparent;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  transition: 160ms ease;
+}
+
+.launch {
+  color: $foam;
+}
+
+.launch:hover,
+.launch:focus {
+  background: rgba($foam, 0.11);
+  color: $text;
+  box-shadow: inset 0 0 0 1px rgba($foam, 0.10);
+}
+
+.session {
+  color: $gold;
+}
+
+.session:hover,
+.session:focus {
+  background: rgba($gold, 0.12);
+  color: $rose-light;
+  box-shadow: inset 0 0 0 1px rgba($gold, 0.10);
+}
+
+.session.danger {
+  color: $rose;
+}
+
+.session.danger:hover,
+.session.danger:focus {
+  background: rgba($rose, 0.14);
+  color: $rose-light;
+  box-shadow: inset 0 0 0 1px rgba($rose, 0.10);
+}
+
+// --------------------------------------------------
+// Stats
+// --------------------------------------------------
+.stats-row {
+  padding: 4px 6px;
+}
+
+.stat {
+  margin: 0 2px;
+  padding: 5px 8px;
+  border-radius: $radius-md;
+  background: rgba($highlight, 0.32);
+  color: $subtle;
+  font-size: 10px;
+  font-weight: 700;
+  transition: 140ms ease;
+}
+
+.stat:hover {
+  background: rgba($highlight, 0.46);
+  color: $text;
+}
+
+.stat.cpu {
+  color: $rose;
+  background: rgba($rose, 0.10);
+}
+
+.stat.mem {
+  color: $iris;
+  background: rgba($iris, 0.10);
+}
+
+.stat.net {
+  color: $foam;
+  background: rgba($foam, 0.08);
+}
+
+// --------------------------------------------------
+// Window title
+// --------------------------------------------------
+.title-box {
+  padding: 3px 4px;
+  min-width: 0;
+  margin-right: 8px;
+}
+
+.title {
+  margin-left: 0;
+  padding: 6px 10px;
+  border-radius: $radius-md;
+  background: linear-gradient(180deg,
+      rgba($iris, 0.16) 0%,
+      rgba($overlay, 0.52) 100%);
+  color: $iris;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  box-shadow: inset 0 0 0 1px rgba($iris, 0.10);
+}
+
+// Clamp center modules
+.title-box {
+  min-width: 0;
+}
+
+.music-box {
+  min-width: 0;
+}
+
+.git-pill {
+  padding: 4px 6px;
+}
+
+// --------------------------------------------------
+// Music
+// --------------------------------------------------
+.music-row {
+  padding: 4px 8px 4px 5px;
+  border: 1px solid rgba($pine, 0.16);
+  background: linear-gradient(180deg,
+      rgba($pine, 0.16) 0%,
+      rgba($overlay, 0.72) 100%);
+  box-shadow: $glow-pine;
+  min-width: 0;
+}
+
+.center-stack .launcher-row {
+  margin-left: 8px;
+}
+
+.music-icon {
+  margin-right: 5px;
+  color: $foam;
+  font-size: 12px;
+}
+
+.music-text {
+  color: $text;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.git-pill .stat {
+  color: $foam;
+  background: rgba($pine, 0.10);
+}
+
+// --------------------------------------------------
+// Clock
+// --------------------------------------------------
+.clock-wrap {
+  padding: 3px;
+  border: 1px solid rgba($iris, 0.12);
+  box-shadow: $glow-iris;
+}
+
+.clock {
+  margin: 0;
+  padding: 6px 10px;
+  border-radius: $radius-md;
+  background: linear-gradient(180deg,
+      rgba($overlay, 0.80) 0%,
+      rgba($surface, 0.60) 100%);
+  color: $text;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  box-shadow: inset 0 1px 0 rgba($text, 0.05);
+}
+
+// --------------------------------------------------
+// Optional text helpers
+// --------------------------------------------------
+.label-muted {
+  color: $muted;
+}
+
+.label-soft {
+  color: $subtle;
+}
+
+.accent-pine {
+  color: $foam;
+}
+
+.accent-iris {
+  color: $iris;
+}
+
+.accent-rose {
+  color: $rose;
+}

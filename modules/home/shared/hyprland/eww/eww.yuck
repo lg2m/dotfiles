@@ -1,0 +1,138 @@
+(defpoll clock :interval "1s"
+  "date '+%a %d %b  %I:%M %p'")
+
+(defpoll active_ws :interval "1s"
+  "hyprctl activeworkspace -j | jq -r '.id'")
+
+(defpoll hypr_layout :interval "3s"
+  "hyprctl getoption general:layout -j | jq -r '.str' | tr '[:lower:]' '[:upper:]'")
+
+(defpoll tiling_mode :interval "2s"
+  "bash -c 'floating=$(hyprctl activewindow -j | jq -r \".floating // false\"); fullscreen=$(hyprctl activewindow -j | jq -r \".fullscreen // 0\"); if [ \"$fullscreen\" != \"0\" ]; then echo \"FULL\"; elif [ \"$floating\" = \"true\" ]; then echo \"FLOAT\"; else echo \"TILE\"; fi'")
+
+(defpoll active_title :interval "1s"
+  "hyprctl activewindow -j | jq -r '.title // \"Desktop\"'")
+
+(defpoll git_context :interval "3s"
+  "bash -c 'pid=$(hyprctl activewindow -j | jq -r \".pid // empty\"); [ -z \"$pid\" ] && exit 0; cwd=$(readlink -f \"/proc/$pid/cwd\" 2>/dev/null) || exit 0; repo=$(git -C \"$cwd\" rev-parse --show-toplevel 2>/dev/null) || exit 0; branch=$(git -C \"$repo\" rev-parse --abbrev-ref HEAD 2>/dev/null) || exit 0; printf \"%s:%s\" \"$(basename \"$repo\")\" \"$branch\"'")
+
+(defpoll cpu :interval "2s"
+  "cat /proc/stat | awk '/^cpu / {print int(($2+$4)*100/($2+$4+$5))}'")
+
+(defpoll memory :interval "5s"
+  "free -m | awk '/^Mem:/ {print int($3*100/$2)}'")
+
+(defpoll net_down :interval "2s"
+  "bash -c 'read rx1 < <(cat /proc/net/dev | awk \"/(eth|wlan|enp|wlp)/ {print \\$2}\" | head -1); sleep 1; read rx2 < <(cat /proc/net/dev | awk \"/(eth|wlan|enp|wlp)/ {print \\$2}\" | head -1); echo $(((rx2-rx1)/1024))'")
+
+(defpoll net_up :interval "2s"
+  "bash -c 'read tx1 < <(cat /proc/net/dev | awk \"/(eth|wlan|enp|wlp)/ {print \\$10}\" | head -1); sleep 1; read tx2 < <(cat /proc/net/dev | awk \"/(eth|wlan|enp|wlp)/ {print \\$10}\" | head -1); echo $(((tx2-tx1)/1024))'")
+
+(defpoll music :interval "2s"
+  "bash -c 'playerctl -p spotify metadata --format \"{{artist}} - {{title}}\" 2>/dev/null || echo \"\"'")
+
+(defpoll volume :interval "2s"
+  "bash -c 'state=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ 2>/dev/null); [ -z \"$state\" ] && { echo \"--\"; exit 0; }; if echo \"$state\" | grep -q \"MUTED\"; then echo \"MUT\"; else echo \"$state\" | awk \"{print int(\\$2*100) \\\"%\\\"}\"; fi'")
+
+(defpoll battery :interval "20s"
+  "bash -c 'for b in /sys/class/power_supply/BAT*; do [ -d \"$b\" ] || continue; cap=$(cat \"$b/capacity\" 2>/dev/null); stat=$(cat \"$b/status\" 2>/dev/null); [ -n \"$cap\" ] && { printf \"%s%% %s\" \"$cap\" \"$stat\"; exit 0; }; done; echo \"\"'")
+
+(defwidget workspaces []
+  (box :class "workspace-strip"
+    (button :class {active_ws == "1" ? "ws active" : "ws"} :hexpand false :onclick "hyprctl dispatch workspace 1" "1")
+    (button :class {active_ws == "2" ? "ws active" : "ws"} :hexpand false :onclick "hyprctl dispatch workspace 2" "2")
+    (button :class {active_ws == "3" ? "ws active" : "ws"} :hexpand false :onclick "hyprctl dispatch workspace 3" "3")
+    (button :class {active_ws == "4" ? "ws active" : "ws"} :hexpand false :onclick "hyprctl dispatch workspace 4" "4")
+    (button :class {active_ws == "5" ? "ws active" : "ws"} :hexpand false :onclick "hyprctl dispatch workspace 5" "5")
+    (button :class {active_ws == "6" ? "ws active" : "ws"} :hexpand false :onclick "hyprctl dispatch workspace 6" "6")
+    (button :class {active_ws == "7" ? "ws active" : "ws"} :hexpand false :onclick "hyprctl dispatch workspace 7" "7")
+    (button :class {active_ws == "8" ? "ws active" : "ws"} :hexpand false :onclick "hyprctl dispatch workspace 8" "8")
+    (button :class {active_ws == "9" ? "ws active" : "ws"} :hexpand false :onclick "hyprctl dispatch workspace 9" "9")
+    (button :class {active_ws == "10" ? "ws active" : "ws"} :hexpand false :onclick "hyprctl dispatch workspace 10" "10")))
+
+(defwidget launcher-row []
+  (box :class "launcher-row"
+    (button :class "launch" :onclick "hyprctl dispatch exec '[workspace 1 silent] helium'" "WEB")
+    (button :class "launch" :onclick "hyprctl dispatch exec '[workspace 2 silent] teams-for-linux'" "TEAM")
+    (button :class "launch" :onclick "hyprctl dispatch exec '[workspace 3 silent] spotify'" "SPOT")
+    (button :class "launch" :onclick "hyprctl dispatch exec '[workspace 4 silent] discord'" "DISC")
+    (button :class "launch" :onclick "hyprctl dispatch exec '[workspace 5 silent] ghostty'" "TERM")))
+
+(defwidget media-controls []
+  (box :class "launcher-row"
+    (button :class "launch" :onclick "playerctl -p spotify previous" "PREV")
+    (button :class "launch" :onclick "playerctl -p spotify play-pause" "PLAY")
+    (button :class "launch" :onclick "playerctl -p spotify next" "NEXT")))
+
+(defwidget session-row []
+  (box :class "session-row"
+    (button :class "session" :onclick "hyprctl reload" "RLD")
+    (button :class "session danger" :onclick "hyprctl dispatch exit" "OUT")))
+
+(defwidget music-widget []
+  (box :class "music-box" :halign "center" :visible {music != ""}
+    (box :class "music-row"
+      (label :class "music-icon" :text "󰎆")
+      (label
+        :class "music-text"
+        :limit-width 32
+        :truncate true
+        :xalign 0
+        :text {music}))))
+
+(defwidget mode-widget []
+  (box :class "stats-row"
+    (label :class "stat" :text "LAY ${hypr_layout}")
+    (label :class "stat" :text {tiling_mode})))
+
+(defwidget active-window []
+  (box :class "title-box"
+    :hexpand true
+    :halign "center"
+    (label
+      :class "title"
+      :limit-width 50
+      :truncate true
+      :xalign 0.5
+      :text {active_title})))
+
+(defwidget git-widget []
+  (box :class "git-pill" :visible {git_context != ""}
+    (label :class "stat" :text {git_context})))
+
+(defwidget system-stats []
+  (box :class "stats-row"
+    (label :class "stat cpu" :text " ${cpu}%")
+    (label :class "stat mem" :text "󰍛 ${memory}%")
+    (label :class "stat net" :text "󰇚${net_down} 󰕒${net_up}")
+    (label :class "stat" :text "󰕾 ${volume}")
+    (label :class "stat" :visible {battery != ""} :text " ${battery}")))
+
+(defwidget now-playing []
+  (box :class "bar-group center-stack" :halign "center"
+    (music-widget)
+    (media-controls)))
+
+(defwidget top-bar []
+  (centerbox :class "bar-shell"
+    (box :class "bar-group left-cluster" :halign "start"
+      (workspaces)
+      (launcher-row)
+      (mode-widget))
+    (box :class "bar-group center-cluster" :hexpand true :halign "center"
+      (active-window)
+      (now-playing))
+    (box :class "bar-group right-cluster" :halign "end"
+      (git-widget)
+      (system-stats)
+      (box :class "clock-wrap"
+        (label :class "clock" :text clock))
+      (session-row))))
+
+(defwindow bar-main
+  :monitor 0
+  :stacking "fg"
+  :focusable false
+  :exclusive true
+  :geometry (geometry :x "0%" :y "0%" :width "100%" :height "52px" :anchor "top center")
+  (top-bar))
