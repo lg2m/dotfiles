@@ -1,4 +1,10 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
+let
+  runnerCount = 3;
+  runnerNames = map (index: if index == 1 then "mimir" else "mimir-${toString index}") (
+    lib.range 1 runnerCount
+  );
+in
 {
   imports = map (n: ./${n}) (
     builtins.filter (n: n != "default.nix") (builtins.attrNames (builtins.readDir ./.))
@@ -24,9 +30,9 @@
     HandleHibernateKey = "ignore";
   };
 
-  services.github-runners.mimir = {
+  services.github-runners = lib.genAttrs runnerNames (name: {
+    inherit name;
     enable = true;
-    name = "mimir";
     url = "https://github.com/veyr-lang";
     tokenFile = "/etc/github-runner/mimir.token";
     tokenType = "auto";
@@ -41,5 +47,18 @@
       curl
       jq
     ];
+
+    serviceOverrides.Slice = "github-runners.slice";
+  });
+
+  systemd.slices.github-runners = {
+    description = "GitHub Actions runner fleet";
+    sliceConfig = {
+      CPUQuota = "800%";
+      CPUWeight = 50;
+      MemoryHigh = "16G";
+      MemoryMax = "20G";
+      MemorySwapMax = "2G";
+    };
   };
 }
