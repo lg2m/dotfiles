@@ -20,6 +20,7 @@ in
       opencode.enable = true;
       claude-code.enable = true;
       codex.enable = true;
+      pi.enable = true;
     };
 
     # GUI deltas
