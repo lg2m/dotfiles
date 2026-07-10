@@ -7,7 +7,6 @@ in
 
   config = lib.mkIf cfg.enable {
     programs.zellij = {
-      attachExistingSession = true;
       enable = true;
       enableZshIntegration = false;
       settings = {

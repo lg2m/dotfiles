@@ -7,7 +7,7 @@ in
 
   config = lib.mkIf cfg.enable {
     programs.fzf = {
-      changeDirWidgetOptions = [ "--preview 'eza -la --group-directories-first --icons {}'" ];
+      changeDirWidget.options = [ "--preview 'eza -la --group-directories-first --icons {}'" ];
       colors = {
         fg = "#908caa";
         "fg+" = "#e0def4";
@@ -31,8 +31,8 @@ in
       ];
       enable = true;
       enableZshIntegration = true;
-      fileWidgetOptions = [ "--preview 'bat --style=numbers --color=always --line-range=:500 {}'" ];
-      historyWidgetOptions = [ "--sort" ];
+      fileWidget.options = [ "--preview 'bat --style=numbers --color=always --line-range=:500 {}'" ];
+      historyWidget.options = [ "--sort" ];
     };
   };
 }
