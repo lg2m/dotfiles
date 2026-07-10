@@ -19,7 +19,6 @@
       claude-code.enable = true;
       codex.enable = false;
       herdr.enable = false;
-      hermes.enable = false;
       plannotator.enable = false;
     };
 

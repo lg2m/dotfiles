@@ -20,7 +20,6 @@ in
       opencode.enable = true;
       claude-code.enable = true;
       codex.enable = true;
-      hermes.enable = false;
     };
 
     # Development deltas

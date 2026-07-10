@@ -11,8 +11,8 @@ in
     ./claude-code
     ./codex
     ./herdr
-    ./hermes
     ./opencode
+    ./pi
     ./plannotator
   ];
 
