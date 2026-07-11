@@ -16,6 +16,7 @@ in
   modules = {
     # Baseline (common toggles + packages live in profile/base)
     profile.base.enable = true;
+    ssh.localHost = "mimir";
     ai = {
       opencode.enable = true;
       claude-code.enable = true;

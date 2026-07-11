@@ -3,7 +3,14 @@ let
   cfg = config.modules.ssh;
 in
 {
-  options.modules.ssh.enable = lib.mkEnableOption "";
+  options.modules.ssh = {
+    enable = lib.mkEnableOption "";
+    localHost = lib.mkOption {
+      type = lib.types.str;
+      default = "";
+      description = "Name of the machine this config is built for; used to suppress a self-referencing SSH host block.";
+    };
+  };
 
   config = lib.mkIf cfg.enable {
     home.file.".ssh/config".force = true;
@@ -26,11 +33,6 @@ in
           ServerAliveCountMax = 3;
           ServerAliveInterval = 60;
         };
-        "mimir" = {
-          HostName = "mimir";
-          User = config.home.username;
-          ForwardAgent = false;
-        };
         "github.com" = {
           HostName = "github.com";
           User = "git";
@@ -45,6 +47,15 @@ in
           HostName = "codeberg.org";
           User = "git";
           IdentityFile = [ "${config.home.homeDirectory}/.ssh/codeberg_ed25519" ];
+        };
+      }
+      // lib.optionalAttrs (cfg.localHost != "mimir") {
+        "mimir" = {
+          HostName = "mimir";
+          User = config.home.username;
+          ForwardAgent = false;
+          IdentitiesOnly = true;
+          IdentityFile = [ "${config.home.homeDirectory}/.ssh/mimir_ed25519" ];
         };
       };
     };
