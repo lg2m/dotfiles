@@ -10,6 +10,7 @@ in
   imports = [
     ./claude-code
     ./codex
+    ./executor
     ./herdr
     ./opencode
     ./pi
@@ -17,7 +18,7 @@ in
   ];
 
   options.modules.ai = {
-    enable = lib.mkEnableOption "AI coding tools (Herdr, OpenCode, Plannotator, etc.)";
+    enable = lib.mkEnableOption "AI coding tools (Herdr, OpenCode, Plannotator, Executor, etc.)";
   };
 
   config = lib.mkIf cfg.enable {
