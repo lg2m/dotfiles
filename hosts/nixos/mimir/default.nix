@@ -137,6 +137,10 @@
       enable = true;
       extraSetFlags = [ "--accept-dns" ];
     };
+    opencode-server = {
+      enable = true;
+      user = "zmeyer";
+    };
   };
 
   system.stateVersion = "25.05";
