@@ -18,7 +18,7 @@
       opencode.enable = true;
       claude-code.enable = true;
       codex.enable = false;
-      executor.enable = true;
+      executor.enable = false;
       herdr.enable = false;
       plannotator.enable = false;
     };
