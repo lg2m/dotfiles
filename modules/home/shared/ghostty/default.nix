@@ -9,7 +9,10 @@ let
     background-opacity = 0.85;
     cursor-style = "bar";
     font-family = "Noto";
-    keybind = [ "ctrl+enter=unbind" ];
+    keybind = [
+      "ctrl+enter=unbind"
+      "alt+backspace=text:\\x1b\\x7f"
+    ];
     mouse-hide-while-typing = true;
     shell-integration-features = "no-sudo,ssh-env,ssh-terminfo";
     theme = "Rose Pine Moon";
