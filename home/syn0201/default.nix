@@ -1,5 +1,6 @@
 {
   config,
+  lib,
   pkgs,
   username ? "zmeyer",
   hostname ? "syn0201",
@@ -43,6 +44,17 @@
     packages = with pkgs; [
       flameshot
     ];
+  };
+
+  programs.ssh.settings = {
+    "mimir".IdentityFile = lib.mkForce [ "${config.home.homeDirectory}/.ssh/syn0201_ed25519" ];
+    "thor" = {
+      HostName = "thor";
+      User = username;
+      ForwardAgent = false;
+      IdentitiesOnly = true;
+      IdentityFile = [ "${config.home.homeDirectory}/.ssh/syn0201_ed25519" ];
+    };
   };
 
   programs.home-manager.enable = true;

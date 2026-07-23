@@ -13,6 +13,9 @@
         "video"
         "audio"
       ];
+      openssh.authorizedKeys.keys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFp93ayCGKzh1aqE7pissZySnkGClHK023SfUoYIHnQ3 syn0201"
+      ];
       shell = pkgs.zsh;
     };
   };
