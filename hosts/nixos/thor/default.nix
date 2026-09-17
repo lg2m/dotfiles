@@ -23,7 +23,6 @@
   programs.zsh.enable = true;
 
   boot = {
-    kernelModules = [ "uinput" ];
     kernelParams = [
       "quiet"
       "splash"
@@ -43,6 +42,27 @@
     };
     kernelPackages = pkgs.linuxPackages_latest;
   };
+
+  environment.etc."crypttab".text = ''
+    data UUID=c6dd0f62-22ce-48b7-b048-9e22be9803a0 /root/.keys/data.key luks
+    scratch UUID=aae545d4-3821-4a8e-af7d-2bb2c1458dfc /root/.keys/data.key luks
+  '';
+
+  fileSystems = {
+    "/data" = {
+      device = "/dev/mapper/data";
+      fsType = "ext4";
+    };
+    "/scratch" = {
+      device = "/dev/mapper/scratch";
+      fsType = "ext4";
+    };
+  };
+
+  systemd.tmpfiles.rules = [
+    "d /data 2775 zmeyer users -"
+    "d /scratch 2775 zmeyer users -"
+  ];
 
   # Networking
   networking = {
@@ -69,8 +89,6 @@
     hosts = {
       "127.0.0.1" = [
         "iam-service"
-        # Mortal Online 2: force EAC to use Proton EasyAntiCheat Runtime's module.
-        "modules-cdn.eac-prod.on.epicgames.com"
       ];
     };
   };
@@ -111,13 +129,16 @@
     };
     dbus.enable = true;
     fontconfig.enable = true;
-    gamemode.enable = true;
-    gamescope.enable = true;
+    gamemode.enable = false;
+    gamescope.enable = false;
     hyprland.enable = true;
     networkmanager = {
       enable = true;
     };
-    nvidia.enable = true;
+    nvidia = {
+      enable = true;
+      enable32Bit = false;
+    };
     pipewire.enable = true;
     security.enable = true;
     security.onepassword = {
@@ -126,7 +147,7 @@
       polkitPolicyOwners = [ "zmeyer" ];
     };
     sudo-rs.enable = true;
-    steam.enable = true;
+    steam.enable = false;
     systemd-boot.enable = true;
     tailscale = {
       enable = true;

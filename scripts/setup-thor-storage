@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if ! command -v cryptsetup >/dev/null ||
+  ! command -v sgdisk >/dev/null ||
+  ! command -v partprobe >/dev/null; then
+  exec nix shell \
+    nixpkgs#cryptsetup \
+    nixpkgs#gptfdisk \
+    nixpkgs#parted \
+    nixpkgs#e2fsprogs \
+    --command "$0" "$@"
+fi
+
+data_disk=/dev/nvme1n1
+scratch_disk=/dev/nvme2n1
+key_file=/root/.keys/data.key
+
+die() {
+  printf 'error: %s\n' "$*" >&2
+  exit 1
+}
+
+[[ $EUID -eq 0 ]] || die "run this script with sudo"
+
+for command in cryptsetup lsblk mkfs.ext4 partprobe sgdisk udevadm; do
+  command -v "$command" >/dev/null || die "missing command: $command"
+done
+
+data_serial=$(tr -d '[:space:]' < /sys/block/nvme1n1/device/serial)
+scratch_serial=$(tr -d '[:space:]' < /sys/block/nvme2n1/device/serial)
+
+[[ $data_serial == 2408E8992490 ]] ||
+  die "$data_disk is not the expected 2 TB Crucial drive"
+[[ $scratch_serial == S4P2NF0M304184W ]] ||
+  die "$scratch_disk is not the expected 500 GB Samsung drive"
+
+if lsblk -nrpo MOUNTPOINT "$data_disk" "$scratch_disk" | grep -qv '^$'; then
+  die "a target disk or partition is mounted"
+fi
+
+printf '%s\n' \
+  "THIS PERMANENTLY ERASES:" \
+  "  $data_disk: 2 TB Crucial, serial 2408E8992490 (Windows)" \
+  "  $scratch_disk: 500 GB Samsung, serial S4P2NF0M304184W" \
+  "" \
+  "Type ERASE-BOTH to continue:"
+read -r confirmation
+[[ $confirmation == ERASE-BOTH ]] || die "confirmation did not match"
+
+install -d -m 0700 "$(dirname "$key_file")"
+if [[ ! -e $key_file ]]; then
+  dd if=/dev/urandom of="$key_file" bs=64 count=1 status=none
+  chmod 0400 "$key_file"
+fi
+
+sgdisk --zap-all "$data_disk"
+sgdisk --new=1:1MiB:0 --typecode=1:8309 --change-name=1:data "$data_disk"
+sgdisk --zap-all "$scratch_disk"
+sgdisk --new=1:1MiB:0 --typecode=1:8309 --change-name=1:scratch "$scratch_disk"
+partprobe "$data_disk" "$scratch_disk"
+udevadm settle
+
+cryptsetup luksFormat --batch-mode --type luks2 \
+  --uuid c6dd0f62-22ce-48b7-b048-9e22be9803a0 \
+  --key-file "$key_file" "${data_disk}p1"
+cryptsetup luksFormat --batch-mode --type luks2 \
+  --uuid aae545d4-3821-4a8e-af7d-2bb2c1458dfc \
+  --key-file "$key_file" "${scratch_disk}p1"
+
+printf '\nSet a recovery passphrase for /data. Store it securely.\n'
+cryptsetup luksAddKey --key-file "$key_file" "${data_disk}p1"
+printf '\nSet a recovery passphrase for /scratch. Store it securely.\n'
+cryptsetup luksAddKey --key-file "$key_file" "${scratch_disk}p1"
+
+cryptsetup open --key-file "$key_file" "${data_disk}p1" data
+cryptsetup open --key-file "$key_file" "${scratch_disk}p1" scratch
+
+mkfs.ext4 -L data -U b452df40-64d4-463a-95f4-925597b23e40 /dev/mapper/data
+mkfs.ext4 -L scratch -U ea8b7e8b-9cd9-43d1-9968-2a0ed69fc8da /dev/mapper/scratch
+
+printf '\nStorage initialized. Now run:\n'
+printf '  sudo nixos-rebuild switch --flake .#thor\n'
+printf '  sudo chown zmeyer:users /data /scratch\n'
+printf '  sudo chmod 2775 /data /scratch\n'

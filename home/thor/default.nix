@@ -18,7 +18,7 @@ in
     profile.base.enable = true;
     ai = {
       aseprite-mcp = {
-        enable = true;
+        enable = false;
         workspace = "${config.home.homeDirectory}/Development/repos/github.com/Waypoint-Interactive/0";
       };
       opencode.enable = true;
@@ -29,7 +29,7 @@ in
     };
 
     # Development deltas
-    game-development.enable = true;
+    game-development.enable = false;
     jetbrains = {
       clion.enable = false;
       datagrip.enable = true;
@@ -67,7 +67,6 @@ in
     packages = with pkgs; [
       # GUI
       discord
-      boxflat
       vscode
       obsidian
       slack
