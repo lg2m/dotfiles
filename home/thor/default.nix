@@ -25,6 +25,7 @@ in
       claude-code.enable = true;
       codex.enable = true;
       pi.enable = true;
+      qq.enable = true;
       grok-build.enable = true;
     };
 

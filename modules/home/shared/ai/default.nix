@@ -17,6 +17,7 @@ in
     ./opencode
     ./pi
     ./plannotator
+    ./qq
   ];
 
   options.modules.ai = {

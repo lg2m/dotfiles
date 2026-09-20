@@ -57,6 +57,7 @@
               helium-browser = final.callPackage ./pkgs/by-name/helium-browser.nix { };
               linear-cli = final.callPackage ./pkgs/by-name/linear-cli.nix { };
               plannotator = final.callPackage ./pkgs/by-name/plannotator.nix { };
+              qq = final.callPackage ./pkgs/by-name/qq.nix { };
               stremio-fixed = final.callPackage ./pkgs/by-name/stremio-fixed.nix { };
             })
           ];
