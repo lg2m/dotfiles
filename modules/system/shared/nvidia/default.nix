@@ -56,13 +56,13 @@ in
     hardware = {
       graphics = {
         enable = true;
-        enable32Bit = cfg.enable32Bit;
+        inherit (cfg) enable32Bit;
       };
       nvidia = {
         modesetting.enable = true;
-        nvidiaSettings = cfg.nvidiaSettings;
-        open = cfg.open;
-        package = cfg.package;
+        inherit (cfg) nvidiaSettings;
+        inherit (cfg) open;
+        inherit (cfg) package;
       };
     };
 

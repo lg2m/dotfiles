@@ -23,7 +23,7 @@ in
   config = lib.mkIf cfg.enable {
     services.tailscale = {
       enable = true;
-      extraSetFlags = cfg.extraSetFlags;
+      inherit (cfg) extraSetFlags;
     };
   };
 }

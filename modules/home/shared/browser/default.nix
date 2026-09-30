@@ -56,7 +56,7 @@ in
       enable = true;
       package = heliumPkg;
 
-      extensions = cfg.extensions;
+      inherit (cfg) extensions;
 
       # commandLineArgs = lib.optionals cfg.wayland [
       #   "--ozone-platform=wayland"

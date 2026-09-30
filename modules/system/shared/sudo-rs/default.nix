@@ -21,7 +21,7 @@ in
 
     security.sudo-rs = {
       enable = true;
-      wheelNeedsPassword = cfg.wheelNeedsPassword;
+      inherit (cfg) wheelNeedsPassword;
     };
   };
 }

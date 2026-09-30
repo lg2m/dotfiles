@@ -3,7 +3,6 @@
   lib,
   pkgs,
   username ? "zmeyer",
-  hostname ? "syn0201",
   ...
 }:
 {
@@ -32,7 +31,7 @@
   };
 
   home = {
-    username = username;
+    inherit username;
     homeDirectory = "/home/${username}";
     stateVersion = "25.05";
     sessionVariables = {

@@ -39,7 +39,7 @@ in
     boot.loader = {
       efi.canTouchEfiVariables = cfg.efiCanTouchVariables;
       systemd-boot.enable = true;
-      timeout = cfg.timeout;
+      inherit (cfg) timeout;
     };
 
     environment.etc."issue" = {

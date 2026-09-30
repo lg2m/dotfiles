@@ -24,7 +24,7 @@ in
   config = lib.mkIf cfg.enable {
     services.dbus = {
       enable = true;
-      implementation = cfg.implementation;
+      inherit (cfg) implementation;
     };
   };
 }

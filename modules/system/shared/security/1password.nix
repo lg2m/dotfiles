@@ -28,7 +28,7 @@ in
 
     programs._1password-gui = lib.mkIf cfg.enableGUI {
       enable = true;
-      polkitPolicyOwners = cfg.polkitPolicyOwners;
+      inherit (cfg) polkitPolicyOwners;
     };
   };
 }

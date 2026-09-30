@@ -56,7 +56,7 @@ in
   config = lib.mkIf cfg.enable {
     fonts.fontconfig = {
       enable = true;
-      antialias = cfg.antialias;
+      inherit (cfg) antialias;
       subpixel = {
         rgba = cfg.subpixelRgba;
         lcdfilter = cfg.subpixelLcdfilter;

@@ -24,11 +24,11 @@ in
       };
       initLua = builtins.readFile ./config/init.lua;
       plugins = with pkgs.yaziPlugins; {
-        full-border = full-border;
-        starship = starship;
-        mount = mount;
-        ouch = ouch;
-        piper = piper;
+        inherit full-border;
+        inherit starship;
+        inherit mount;
+        inherit ouch;
+        inherit piper;
       };
       keymap = {
         mgr = {
