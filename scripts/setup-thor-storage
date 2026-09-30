@@ -27,8 +27,8 @@ for command in cryptsetup lsblk mkfs.ext4 partprobe sgdisk udevadm; do
   command -v "$command" >/dev/null || die "missing command: $command"
 done
 
-data_serial=$(tr -d '[:space:]' < /sys/block/nvme1n1/device/serial)
-scratch_serial=$(tr -d '[:space:]' < /sys/block/nvme2n1/device/serial)
+data_serial=$(tr -d '[:space:]' </sys/block/nvme1n1/device/serial)
+scratch_serial=$(tr -d '[:space:]' </sys/block/nvme2n1/device/serial)
 
 [[ $data_serial == 2408E8992490 ]] ||
   die "$data_disk is not the expected 2 TB Crucial drive"

@@ -1,0 +1,34 @@
+# sops creation rules (ADR 0008/0009). Keep recipients in sync with
+# inventory.nix: `just host-age <host>` prints a host's age recipient.
+#
+# After editing recipients, re-encrypt every file:  just secrets-updatekeys
+keys:
+  # Admin: can edit everything. Private key at ~/.config/sops/age/keys.txt,
+  # backed up in 1Password ("dotfiles sops admin age key").
+  - &admin age1edpgldvjwav7q44cdtyvk0f8y0mm4f3duhksuvhq7tt323mhl9ask42wek
+
+  # NixOS / darwin hosts: ssh-to-age < /etc/ssh/ssh_host_ed25519_key.pub
+  - &thor age1037a7v3n9h2wlhzncs5qfahuxnmy7ayal7jgkl48zd6xjqvaxssq852vur
+  # - &mimir age1...   # TODO: just host-age mimir
+
+  # Standalone Home Manager hosts: user age key on that machine
+  # (age-keygen -o ~/.config/sops/age/keys.txt; then age-keygen -y ...)
+  # - &syn0201 age1...
+
+creation_rules:
+  - path_regex: ^secrets/hosts/thor\.yaml$
+    key_groups:
+      - age: [*admin, *thor]
+
+  # - path_regex: ^secrets/hosts/mimir\.yaml$
+  #   key_groups:
+  #     - age: [*admin, *mimir]
+
+  # - path_regex: ^secrets/home/syn0201\.yaml$
+  #   key_groups:
+  #     - age: [*admin, *syn0201]
+
+  # Shared by all system hosts. Use sparingly (ADR 0009).
+  - path_regex: ^secrets/common\.yaml$
+    key_groups:
+      - age: [*admin, *thor]

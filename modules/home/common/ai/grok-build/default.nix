@@ -1,0 +1,18 @@
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.my.ai.grok-build;
+in
+{
+  options.my.ai.grok-build = {
+    enable = lib.mkEnableOption "Grok Build AI coding assistant";
+  };
+
+  config = lib.mkIf cfg.enable {
+    home.packages = [ pkgs.grok-build ];
+  };
+}

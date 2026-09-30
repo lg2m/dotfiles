@@ -8,3 +8,4 @@ opencode.json
 *.env
 nm-secrets/
 .tmp_*
+.direnv/
