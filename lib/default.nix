@@ -62,8 +62,13 @@ let
     (homeLibrary host.system)
   ];
 
+  # System module libraries (ADR 0003). modules/common goes last so the
+  # order of list definitions from pre-existing modules is unchanged.
   nixosLibrary = {
-    imports = importTree (repo + "/modules/nixos");
+    imports = importTree (repo + "/modules/nixos") ++ importTree (repo + "/modules/common");
+  };
+  darwinLibrary = {
+    imports = importTree (repo + "/modules/darwin") ++ importTree (repo + "/modules/common");
   };
 
   specialArgsFor = name: host: {
@@ -102,6 +107,23 @@ let
       ];
     };
 
+  mkDarwin =
+    name: host:
+    inputs.nix-darwin.lib.darwinSystem {
+      specialArgs = specialArgsFor name host;
+      modules = [
+        (repo + "/hosts/${name}")
+        darwinLibrary
+        {
+          networking.hostName = name;
+          nixpkgs.hostPlatform = host.system;
+          nixpkgs.overlays = overlays;
+        }
+        inputs.home-manager.darwinModules.home-manager
+        (hmIntegration name host)
+      ];
+    };
+
   mkHome =
     name: host:
     inputs.home-manager.lib.homeManagerConfiguration {
@@ -120,11 +142,13 @@ in
   inherit
     importTree
     inventory
+    mkDarwin
     mkHome
     mkNixos
     ;
 
   nixosConfigurations = lib.mapAttrs mkNixos (ofKind "nixos");
+  darwinConfigurations = lib.mapAttrs mkDarwin (ofKind "darwin");
   homeConfigurations = lib.mapAttrs' (
     name: host: lib.nameValuePair "${host.user}@${name}" (mkHome name host)
   ) (ofKind "home");

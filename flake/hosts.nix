@@ -5,6 +5,6 @@ let
 in
 {
   flake = {
-    inherit (my) nixosConfigurations homeConfigurations;
+    inherit (my) nixosConfigurations darwinConfigurations homeConfigurations;
   };
 }

@@ -3,7 +3,6 @@
 {
   lib,
   config,
-  inputs,
   ...
 }:
 let
@@ -21,35 +20,17 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    nixpkgs.config.allowUnfree = true;
-
-    nix = {
-      settings = {
-        auto-optimise-store = true;
-        experimental-features = [
-          "nix-command"
-          "flakes"
-        ];
-        sandbox = true;
-        trusted-users = [
-          "root"
-          cfg.username
-        ];
-        require-sigs = true;
-        warn-dirty = false;
-      };
-      # Flakes only: pin `nixpkgs` in the registry and NIX_PATH to this
-      # flake's input so `nix shell nixpkgs#x` and `<nixpkgs>` match the system.
-      channel.enable = false;
-      registry.nixpkgs.flake = inputs.nixpkgs;
-      nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
-      optimise = {
-        automatic = true;
-        dates = [ "05:00" ];
-      };
-      # Garbage collection is handled by nh (programs.nh.clean), see below.
+    my.nix = {
+      enable = true;
+      trustedUser = cfg.username;
     };
 
+    nix.optimise = {
+      automatic = true;
+      dates = [ "05:00" ];
+    };
+
+    # Garbage collection via nh (replaces nix.gc).
     programs.nh = {
       enable = true;
       clean = {
