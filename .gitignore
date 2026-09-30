@@ -3,3 +3,8 @@
 result
 opencode.json
 .opencode/
+
+# Secrets / scratch keys: never commit
+*.env
+nm-secrets/
+.tmp_*

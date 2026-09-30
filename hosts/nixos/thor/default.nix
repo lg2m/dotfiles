@@ -134,10 +134,12 @@
     hyprland.enable = true;
     networkmanager = {
       enable = true;
+      # Secrets live in /etc/nm-secrets/meraki-vpn.env (root-only, untracked).
+      merakiVpn.enable = true;
     };
     nvidia = {
       enable = true;
-      enable32Bit = false;
+      enable32Bit = true;
     };
     pipewire.enable = true;
     security.enable = true;
@@ -147,7 +149,7 @@
       polkitPolicyOwners = [ "zmeyer" ];
     };
     sudo-rs.enable = true;
-    steam.enable = false;
+    steam.enable = true;
     systemd-boot.enable = true;
     tailscale = {
       enable = true;
