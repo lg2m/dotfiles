@@ -11,10 +11,10 @@ in
   options.my.yazi.enable = lib.mkEnableOption "";
 
   config = lib.mkIf cfg.enable {
-    home.packages = with pkgs; [
-      ouch
-      wl-clipboard-rs
-    ];
+    home.packages = [
+      pkgs.ouch
+    ]
+    ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [ pkgs.wl-clipboard-rs ];
 
     programs.yazi = {
       enable = true;

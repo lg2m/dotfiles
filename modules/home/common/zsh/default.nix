@@ -1,6 +1,12 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 let
   cfg = config.my.zsh;
+  copy = if pkgs.stdenv.hostPlatform.isDarwin then "pbcopy" else "wl-copy";
 in
 {
   options.my.zsh.enable = lib.mkEnableOption "";
@@ -46,8 +52,8 @@ in
         wt = "git worktree";
 
         # Clipboard helpers
-        cdp = "pwd | wl-copy";
-        cfp = ''(){ readlink -f "$1" | wl-copy }'';
+        cdp = "pwd | ${copy}";
+        cfp = ''(){ readlink -f "$1" | ${copy} }'';
 
         # Directory creation
         mk = ''() { mkdir -p -- "$1" && cd -- "$1" }'';
