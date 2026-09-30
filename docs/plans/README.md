@@ -5,7 +5,7 @@ active plan is tracked in [progress.md](progress.md).
 
 | # | Plan | Status |
 |---|------|--------|
-| [0001](0001-rearchitecture.md) | Re-architect repo (platform split, inventory, sops-nix, tooling) | in progress |
+| [0001](0001-rearchitecture.md) | Re-architect repo (platform split, inventory, sops-nix, tooling) | implemented; rollout pending |
 
 Conventions:
 
