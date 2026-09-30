@@ -22,7 +22,7 @@ in
 
     # Codex owns its mutable config. Update only this server using its CLI,
     # preserving authentication, trusted projects, and other integrations.
-    home.activation.asepriteMcp = lib.mkIf config.modules.ai.codex.enable (
+    home.activation.asepriteMcp = lib.mkIf config.modules.ai.openai.codex.enable (
       lib.hm.dag.entryAfter [ "linkGeneration" ] ''
         run ${pkgs.coreutils}/bin/mkdir -p ${lib.escapeShellArg cfg.workspace}
         run ${config.home.profileDirectory}/bin/codex mcp add aseprite \

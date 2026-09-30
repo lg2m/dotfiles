@@ -23,7 +23,10 @@ in
       };
       opencode.enable = true;
       claude-code.enable = true;
-      codex.enable = true;
+      openai = {
+        codex.enable = true;
+        desktop.enable = true;
+      };
       pi.enable = true;
       qq.enable = true;
       grok-build.enable = true;

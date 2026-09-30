@@ -12,6 +12,10 @@
       url = "github:ogulcancelik/herdr/v0.7.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    codex-desktop-linux = {
+      url = "github:ilysenko/codex-desktop-linux";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -52,6 +56,8 @@
           overlays = [
             (final: prev: {
               herdr = inputs.herdr.packages.${final.stdenv.hostPlatform.system}.herdr;
+              codex-desktop =
+                inputs.codex-desktop-linux.packages.${final.stdenv.hostPlatform.system}.codex-desktop;
               aseprite-mcp = final.callPackage ./pkgs/by-name/aseprite-mcp.nix { };
               executor = final.callPackage ./pkgs/by-name/executor.nix { };
               helium-browser = final.callPackage ./pkgs/by-name/helium-browser.nix { };

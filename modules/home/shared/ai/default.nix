@@ -10,10 +10,10 @@ in
   imports = [
     ./aseprite-mcp
     ./claude-code
-    ./codex
     ./executor
     ./grok-build
     ./herdr
+    ./openai
     ./opencode
     ./pi
     ./plannotator

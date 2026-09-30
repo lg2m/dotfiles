@@ -18,7 +18,7 @@
     ai = {
       opencode.enable = true;
       claude-code.enable = true;
-      codex.enable = false;
+      openai.codex.enable = false;
       executor.enable = false;
       herdr.enable = true;
       plannotator.enable = false;

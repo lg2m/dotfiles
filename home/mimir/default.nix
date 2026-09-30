@@ -20,7 +20,7 @@ in
     ai = {
       opencode.enable = true;
       claude-code.enable = true;
-      codex.enable = true;
+      openai.codex.enable = true;
       executor.enable = true;
       pi.enable = true;
     };

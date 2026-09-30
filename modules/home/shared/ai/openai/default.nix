@@ -5,7 +5,7 @@
   ...
 }:
 let
-  cfg = config.modules.ai.codex;
+  cfg = config.modules.ai.openai;
 
   codexVersion = "0.153.4";
 
@@ -33,11 +33,21 @@ let
   );
 in
 {
-  options.modules.ai.codex = {
-    enable = lib.mkEnableOption "OpenAI Codex CLI coding assistant";
+  options.modules.ai.openai = {
+    codex.enable = lib.mkEnableOption "OpenAI Codex CLI coding assistant";
+
+    # Unofficial repackaging of OpenAI's signed Linux ChatGPT/Codex desktop app
+    # (github:ilysenko/codex-desktop-linux). Uses the Codex CLI bundled with the
+    # desktop payload so the app/CLI protocol versions always match.
+    desktop.enable = lib.mkEnableOption "ChatGPT/Codex desktop app (codex-desktop)";
   };
 
-  config = lib.mkIf cfg.enable {
-    home.packages = [ codex ];
-  };
+  config = lib.mkMerge [
+    (lib.mkIf cfg.codex.enable {
+      home.packages = [ codex ];
+    })
+    (lib.mkIf cfg.desktop.enable {
+      home.packages = [ pkgs.codex-desktop ];
+    })
+  ];
 }
