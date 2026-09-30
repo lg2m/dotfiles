@@ -29,13 +29,27 @@ in
         description = "NetworkManager connection id for the Meraki VPN.";
       };
 
+      fromSops = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = ''
+          Read the env file from sops (`meraki-vpn.env` in the host secrets
+          file, dotenv content) instead of a hand-placed file.
+        '';
+      };
+
       # Kept as a string so the file is never copied into the Nix store.
       environmentFile = lib.mkOption {
         type = lib.types.str;
-        default = "/etc/nm-secrets/meraki-vpn.env";
+        default =
+          if vpn.fromSops then
+            config.sops.secrets."meraki-vpn.env".path
+          else
+            "/etc/nm-secrets/meraki-vpn.env";
+        defaultText = lib.literalExpression ''sops path if fromSops else "/etc/nm-secrets/meraki-vpn.env"'';
         description = ''
-          Root-only env file (not tracked in git) providing
-          MERAKI_GATEWAY, MERAKI_USER, MERAKI_PASSWORD and MERAKI_PSK.
+          Root-only env file providing MERAKI_GATEWAY, MERAKI_USER,
+          MERAKI_PASSWORD and MERAKI_PSK.
         '';
       };
     };
@@ -65,6 +79,13 @@ in
           }
         '';
       }
+
+      (lib.mkIf (vpn.enable && vpn.fromSops) {
+        sops.secrets."meraki-vpn.env" = {
+          # Whole file is one sops value (multi-line dotenv string).
+          restartUnits = [ "NetworkManager-ensure-profiles.service" ];
+        };
+      })
 
       (lib.mkIf vpn.enable {
         # Only $VAR placeholders reach the store; values are substituted at
@@ -107,7 +128,7 @@ in
           };
         };
 
-        systemd.tmpfiles.rules = [ "d /etc/nm-secrets 0700 root root -" ];
+        systemd.tmpfiles.rules = lib.mkIf (!vpn.fromSops) [ "d /etc/nm-secrets 0700 root root -" ];
 
         environment.systemPackages = [ pkgs.networkmanagerapplet ];
       })
