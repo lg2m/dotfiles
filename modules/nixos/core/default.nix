@@ -1,6 +1,9 @@
+# Core NixOS settings every machine gets via profiles/nixos/base.nix:
+# nix daemon config, locale/time, firewall baseline.
 {
   lib,
   config,
+  inputs,
   ...
 }:
 let
@@ -8,21 +11,18 @@ let
 in
 {
   options.my.core = {
-    enable = lib.mkEnableOption "";
+    enable = lib.mkEnableOption "core NixOS settings (nix, locale, firewall)";
 
     username = lib.mkOption {
       type = lib.types.str;
-      default = "zmeyer";
       example = "zmeyer";
-      description = "Username";
+      description = "Primary user of this machine (set by users/<name>/nixos.nix).";
     };
   };
 
   config = lib.mkIf cfg.enable {
-    # Allow unfree
     nixpkgs.config.allowUnfree = true;
 
-    # Nix configuration
     nix = {
       settings = {
         auto-optimise-store = true;
@@ -38,52 +38,59 @@ in
         require-sigs = true;
         warn-dirty = false;
       };
-      channel.enable = true;
-      gc = {
-        automatic = true;
-        dates = "weekly";
-        options = "--delete-older-than 7d";
-      };
+      # Flakes only: pin `nixpkgs` in the registry and NIX_PATH to this
+      # flake's input so `nix shell nixpkgs#x` and `<nixpkgs>` match the system.
+      channel.enable = false;
+      registry.nixpkgs.flake = inputs.nixpkgs;
+      nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
       optimise = {
         automatic = true;
-        dates = "05:00";
+        dates = [ "05:00" ];
       };
+      # Garbage collection is handled by nh (programs.nh.clean), see below.
     };
 
-    networking = {
-      firewall = {
+    programs.nh = {
+      enable = true;
+      clean = {
         enable = true;
-        extraInputRules = ''
-          # Allow all the IP's in the tailscale subnet to bypass firewall.
-          -A INPUT -i tailscale0 -j ACCEPT
-        '';
+        dates = "weekly";
+        extraArgs = "--keep-since 7d --keep 5";
       };
     };
 
-    # Keymap
+    networking.firewall = {
+      enable = true;
+      # NOTE: extraInputRules only takes effect with networking.nftables.enable.
+      # These hosts use the iptables backend, so this is currently inert.
+      # Decide deliberately before switching to trustedInterfaces = [ "tailscale0" ]
+      # (that would open every port to the tailnet). Tracked in docs/plans/progress.md.
+      extraInputRules = ''
+        -A INPUT -i tailscale0 -j ACCEPT
+      '';
+    };
+
     console.keyMap = "us";
     services.xserver.xkb = {
       layout = "us";
       variant = "";
     };
 
-    # Time zone
     time.timeZone = "America/Los_Angeles";
 
-    # Internationalisation properties
     i18n = {
       defaultLocale = "en_US.UTF-8";
-      extraLocaleSettings = {
-        LC_ADDRESS = "en_US.UTF-8";
-        LC_IDENTIFICATION = "en_US.UTF-8";
-        LC_MEASUREMENT = "en_US.UTF-8";
-        LC_MONETARY = "en_US.UTF-8";
-        LC_NAME = "en_US.UTF-8";
-        LC_NUMERIC = "en_US.UTF-8";
-        LC_PAPER = "en_US.UTF-8";
-        LC_TELEPHONE = "en_US.UTF-8";
-        LC_TIME = "en_US.UTF-8";
-      };
+      extraLocaleSettings = lib.genAttrs [
+        "LC_ADDRESS"
+        "LC_IDENTIFICATION"
+        "LC_MEASUREMENT"
+        "LC_MONETARY"
+        "LC_NAME"
+        "LC_NUMERIC"
+        "LC_PAPER"
+        "LC_TELEPHONE"
+        "LC_TIME"
+      ] (_: "en_US.UTF-8");
     };
   };
 }

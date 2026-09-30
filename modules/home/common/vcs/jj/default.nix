@@ -1,6 +1,7 @@
 { lib, config, ... }:
 let
   cfg = config.my.vcs.jj;
+  id = config.my.identity;
 in
 {
   options.my.vcs.jj.enable = lib.mkEnableOption "Jujutsu version control configuration";
@@ -8,11 +9,9 @@ in
   config = lib.mkIf cfg.enable {
     programs.jujutsu = {
       enable = true;
-      settings = {
-        user = {
-          email = "159225316+lg2m@users.noreply.github.com";
-          name = "Zachary Meyer";
-        };
+      settings.user = {
+        inherit (id) email;
+        name = id.fullName;
       };
     };
   };

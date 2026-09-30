@@ -45,6 +45,6 @@ in
     };
 
     # Ensure user is in gamemode group for proper permissions.
-    users.users.zmeyer.extraGroups = [ "gamemode" ];
+    users.users.${config.my.core.username}.extraGroups = [ "gamemode" ];
   };
 }

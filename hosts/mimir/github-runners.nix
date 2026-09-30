@@ -1,3 +1,4 @@
+# Self-hosted GitHub Actions runners for github.com/veyr-lang.
 { lib, pkgs, ... }:
 let
   runnerCount = 3;
@@ -9,22 +10,6 @@ in
   systemd.tmpfiles.rules = [
     "d /etc/github-runner 0700 root root -"
   ];
-
-  systemd.sleep.settings.Sleep = {
-    AllowSuspend = "no";
-    AllowHibernation = "no";
-    AllowHybridSleep = "no";
-    AllowSuspendThenHibernate = "no";
-  };
-
-  services.logind.settings.Login = {
-    IdleAction = "ignore";
-    HandleLidSwitch = "ignore";
-    HandleLidSwitchDocked = "ignore";
-    HandleLidSwitchExternalPower = "ignore";
-    HandleSuspendKey = "ignore";
-    HandleHibernateKey = "ignore";
-  };
 
   services.github-runners = lib.genAttrs runnerNames (name: {
     inherit name;

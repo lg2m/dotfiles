@@ -1,9 +1,9 @@
 { lib, config, ... }:
 let
-  cfg = config.my.security.onepassword;
+  cfg = config.my.onepassword;
 in
 {
-  options.my.security.onepassword = {
+  options.my.onepassword = {
     enable = lib.mkEnableOption "1Password (CLI + GUI)";
 
     enableGUI = lib.mkOption {

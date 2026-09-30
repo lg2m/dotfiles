@@ -1,27 +1,18 @@
-{
-  lib,
-  config,
-  pkgs,
-  ...
-}:
-let
-  wallpapersDir = ../../wallpapers;
-in
+{ config, pkgs, ... }:
 {
   imports = [
-    ./home-hyprland.nix
+    ../../users/zmeyer/home.nix
+    ../../profiles/home/dev.nix
+    ../../profiles/home/gui.nix
+    ../../profiles/desktop/hyprland/home.nix
   ];
 
   my = {
-    # Baseline (common toggles + packages live in profile/base)
-    profile.base.enable = true;
     ai = {
       aseprite-mcp = {
         enable = false;
         workspace = "${config.home.homeDirectory}/Development/repos/github.com/Waypoint-Interactive/0";
       };
-      opencode.enable = true;
-      claude-code.enable = true;
       openai = {
         codex.enable = true;
         desktop.enable = true;
@@ -31,62 +22,41 @@ in
       grok-build.enable = true;
     };
 
-    # Development deltas
+    browser.enable = true;
     game-development.enable = false;
     jetbrains = {
-      clion.enable = false;
-      datagrip.enable = true;
       enable = true;
-      idea.enable = false;
+      datagrip.enable = true;
     };
-
-    # GUI deltas
-    browser.enable = true;
-    ghostty.enable = true;
     media = {
       enable = true;
       stremio.enable = true;
     };
+
     hyprland = {
-      clipboard.enable = true;
-      enable = true;
-      eww.enable = true;
-      hypridle.enable = true;
-      hyprlock.enable = true;
-      mako.enable = true;
-      screenshot.enable = true;
-      awww.enable = true;
-      yofi.enable = true;
+      monitors = [ ",5120x1440@239.76,auto,1" ];
+      startup = [ "goxlr-daemon" ];
     };
   };
 
   home = {
-    file."Pictures/wallpapers".source = wallpapersDir;
-    homeDirectory = lib.mkForce "/home/zmeyer";
+    file."Pictures/wallpapers".source = ../../wallpapers;
     stateVersion = "25.05";
-    username = "zmeyer";
 
-    # thor-only packages (baseline set lives in profile/base)
     packages = with pkgs; [
       # GUI
       discord
-      vscode
       obsidian
       slack
       teams-for-linux
+      vscode
 
-      # Container & Orchestration
+      # Containers / secrets / media
       docker-compose
-
-      # Secrets / Dev env
       doppler
-
-      # Utils
       ffmpeg-full
-      silicon
-
       juce
+      silicon
     ];
   };
-
 }

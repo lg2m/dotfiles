@@ -93,7 +93,10 @@ let
       modules = [
         (repo + "/hosts/${name}")
         nixosLibrary
-        { nixpkgs.overlays = overlays; }
+        {
+          networking.hostName = name;
+          nixpkgs.overlays = overlays;
+        }
         inputs.home-manager.nixosModules.home-manager
         (hmIntegration name host)
       ];

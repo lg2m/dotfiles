@@ -1,55 +1,24 @@
-{
-  lib,
-  pkgs,
-  ...
-}:
-let
-  wallpapersDir = ../../wallpapers;
-in
+{ pkgs, ... }:
 {
   imports = [
-    ./home-hyprland.nix
+    ../../users/zmeyer/home.nix
+    ../../profiles/home/dev.nix
+    ../../profiles/home/gui.nix
+    ../../profiles/desktop/plasma/home.nix
   ];
 
   my = {
-    # Baseline (common toggles + packages live in profile/base)
-    profile.base.enable = true;
-    ssh.localHost = "mimir";
     ai = {
-      opencode.enable = true;
-      claude-code.enable = true;
       openai.codex.enable = true;
       executor.enable = true;
       pi.enable = true;
     };
-
-    # GUI deltas
     browser.enable = true;
-    ghostty.enable = true;
-    # hyprland = {
-    #   clipboard.enable = true;
-    #   enable = true;
-    #   eww.enable = true;
-    #   hypridle.enable = true;
-    #   hyprlock.enable = true;
-    #   mako.enable = true;
-    #   screenshot.enable = true;
-    #   awww.enable = true;
-    #   yofi.enable = true;
-    # };
   };
 
   home = {
-    file."Pictures/wallpapers".source = wallpapersDir;
-    homeDirectory = lib.mkForce "/home/zmeyer";
+    file."Pictures/wallpapers".source = ../../wallpapers;
     stateVersion = "25.05";
-    username = "zmeyer";
-
-    # mimir-only packages (baseline set lives in profile/base)
-    packages = with pkgs; [
-      # Container & Orchestration
-      docker-compose
-    ];
+    packages = with pkgs; [ docker-compose ];
   };
-
 }

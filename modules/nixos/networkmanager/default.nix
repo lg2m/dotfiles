@@ -53,7 +53,7 @@ in
         # NetworkManager.conf changes; restart when the plugin changes too.
         systemd.services.NetworkManager.restartTriggers = [ networkmanager-l2tp ];
 
-        users.users.zmeyer.extraGroups = [ "networkmanager" ];
+        users.users.${config.my.core.username}.extraGroups = [ "networkmanager" ];
 
         # nm-l2tp spawns strongSwan's charon, which aborts ("integrity test of
         # libstrongswan failed") when /etc/strongswan.conf is missing. NixOS

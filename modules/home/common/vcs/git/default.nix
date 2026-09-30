@@ -6,6 +6,8 @@
 }:
 let
   cfg = config.my.vcs.git;
+  id = config.my.identity;
+  reposDir = "${config.home.homeDirectory}/Development/repos";
 in
 {
   options.my.vcs.git.enable = lib.mkEnableOption "Git version control configuration";
@@ -19,30 +21,22 @@ in
       delta.enable = false;
       git = {
         enable = true;
-        includes = [
-          {
-            condition = "gitdir:${config.home.homeDirectory}/Development/repos/gitlab.com/syntiantall/";
-            contents.user.email = "5631694-zmeyer@users.noreply.gitlab.com";
-          }
-          {
-            condition = "gitdir:${config.home.homeDirectory}/Development/repos/codeberg.org/";
-            contents.user.email = "zmeyer@noreply.codeberg.org";
-          }
-        ];
+        includes = lib.mapAttrsToList (prefix: email: {
+          condition = "gitdir:${reposDir}/${prefix}";
+          contents.user.email = email;
+        }) id.gitIncludes;
         lfs.enable = true;
         settings = {
-          extraConfig = {
-            "difftool \"difftastic\"".cmd =
-              "difft --color=auto --background=dark --width=200 \"$LOCAL\" \"$REMOTE\"";
-            difftool.prompt = false;
-            diff.tool = "difftastic";
-            init.defaultBranch = "main";
-            pull.rebase = true;
-            push.autoSetupRemote = true;
-          };
+          "difftool \"difftastic\"".cmd =
+            "difft --color=auto --background=dark --width=200 \"$LOCAL\" \"$REMOTE\"";
+          difftool.prompt = false;
+          diff.tool = "difftastic";
+          init.defaultBranch = "main";
+          pull.rebase = true;
+          push.autoSetupRemote = true;
           user = {
-            email = "159225316+lg2m@users.noreply.github.com";
-            name = "Zachary Meyer";
+            inherit (id) email;
+            name = id.fullName;
           };
         };
       };
