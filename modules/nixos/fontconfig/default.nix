@@ -1,9 +1,9 @@
 { lib, config, ... }:
 let
-  cfg = config.modules.fontconfig;
+  cfg = config.my.fontconfig;
 in
 {
-  options.modules.fontconfig = {
+  options.my.fontconfig = {
     enable = lib.mkEnableOption "Enable and configure Fontconfig for system fonts.";
 
     antialias = lib.mkOption {

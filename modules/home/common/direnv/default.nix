@@ -1,9 +1,9 @@
 { lib, config, ... }:
 let
-  cfg = config.modules.direnv;
+  cfg = config.my.direnv;
 in
 {
-  options.modules.direnv.enable = lib.mkEnableOption "";
+  options.my.direnv.enable = lib.mkEnableOption "";
 
   config = lib.mkIf cfg.enable {
     programs.direnv = {

@@ -5,11 +5,11 @@
   ...
 }:
 let
-  hyprCfg = config.modules.hyprland;
-  cfg = config.modules.hyprland.hypridle;
+  hyprCfg = config.my.hyprland;
+  cfg = config.my.hyprland.hypridle;
 in
 {
-  options.modules.hyprland.hypridle = {
+  options.my.hyprland.hypridle = {
     enable = (lib.mkEnableOption "Enable hypridle idle management for Hyprland sessions.") // {
       default = true;
     };

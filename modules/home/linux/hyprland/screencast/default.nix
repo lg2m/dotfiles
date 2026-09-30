@@ -5,8 +5,8 @@
   ...
 }:
 let
-  hyprCfg = config.modules.hyprland;
-  cfg = config.modules.hyprland.screencast;
+  hyprCfg = config.my.hyprland;
+  cfg = config.my.hyprland.screencast;
 
   recordDir = "${config.home.homeDirectory}/Videos/Recordings";
 
@@ -70,7 +70,7 @@ let
   };
 in
 {
-  options.modules.hyprland.screencast = {
+  options.my.hyprland.screencast = {
     enable = (lib.mkEnableOption "Enable screen recording tooling for Hyprland sessions.") // {
       default = true;
     };

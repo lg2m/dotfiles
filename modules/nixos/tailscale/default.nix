@@ -1,9 +1,9 @@
 { lib, config, ... }:
 let
-  cfg = config.modules.tailscale;
+  cfg = config.my.tailscale;
 in
 {
-  options.modules.tailscale = {
+  options.my.tailscale = {
     enable = lib.mkEnableOption "Enable Tailscale VPN service.";
 
     extraSetFlags = lib.mkOption {

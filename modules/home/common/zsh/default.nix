@@ -1,9 +1,9 @@
 { lib, config, ... }:
 let
-  cfg = config.modules.zsh;
+  cfg = config.my.zsh;
 in
 {
-  options.modules.zsh.enable = lib.mkEnableOption "";
+  options.my.zsh.enable = lib.mkEnableOption "";
 
   config = lib.mkIf cfg.enable {
     programs.zsh = {

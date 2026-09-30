@@ -12,7 +12,7 @@ in
     ./home-hyprland.nix
   ];
 
-  modules = {
+  my = {
     # Baseline (common toggles + packages live in profile/base)
     profile.base.enable = true;
     ai = {

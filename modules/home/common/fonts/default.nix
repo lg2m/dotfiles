@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.modules.fonts;
+  cfg = config.my.fonts;
 in
 {
-  options.modules.fonts.enable = lib.mkEnableOption "";
+  options.my.fonts.enable = lib.mkEnableOption "";
 
   config = lib.mkIf cfg.enable {
     home.file.".config/fontconfig/conf.d/10-tx02-alias.conf".text = ''

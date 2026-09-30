@@ -5,12 +5,12 @@
   ...
 }:
 let
-  hyprCfg = config.modules.hyprland;
-  cfg = config.modules.hyprland.thunar;
+  hyprCfg = config.my.hyprland;
+  cfg = config.my.hyprland.thunar;
   thunarExe = lib.getExe pkgs.thunar;
 in
 {
-  options.modules.hyprland.thunar = {
+  options.my.hyprland.thunar = {
     enable = (lib.mkEnableOption "Enable the Thunar file manager for Hyprland sessions.") // {
       default = true;
     };

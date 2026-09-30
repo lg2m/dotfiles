@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.modules.gamemode;
+  cfg = config.my.gamemode;
 in
 {
-  options.modules.gamemode = {
+  options.my.gamemode = {
     enable = lib.mkEnableOption "";
   };
 

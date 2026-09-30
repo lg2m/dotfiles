@@ -113,7 +113,7 @@
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
-  modules = {
+  my = {
     bluetooth.enable = true;
     core = {
       enable = true;

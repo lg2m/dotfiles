@@ -5,7 +5,7 @@
   ...
 }:
 let
-  cfg = config.modules.hyprland;
+  cfg = config.my.hyprland;
   appOptions = lib.types.submodule {
     options = {
       terminal = lib.mkOption {
@@ -54,7 +54,7 @@ let
   );
 in
 {
-  options.modules.hyprland = {
+  options.my.hyprland = {
     enable = lib.mkEnableOption "Enable shared Hyprland user session config.";
 
     apps = lib.mkOption {
@@ -92,7 +92,7 @@ in
     assertions = [
       {
         assertion = pkgs.stdenv.hostPlatform.isLinux;
-        message = "modules.hyprland currently targets Linux/Home Manager environments only.";
+        message = "my.hyprland currently targets Linux/Home Manager environments only.";
       }
     ];
 

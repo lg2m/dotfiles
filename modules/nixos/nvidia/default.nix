@@ -1,9 +1,9 @@
 { lib, config, ... }:
 let
-  cfg = config.modules.nvidia;
+  cfg = config.my.nvidia;
 in
 {
-  options.modules.nvidia = {
+  options.my.nvidia = {
     enable = lib.mkEnableOption "Enable NVIDIA proprietary driver stack.";
 
     enable32Bit = lib.mkOption {

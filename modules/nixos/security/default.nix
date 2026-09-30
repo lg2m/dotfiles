@@ -1,17 +1,17 @@
 { lib, config, ... }:
 let
-  cfg = config.modules.security;
+  cfg = config.my.security;
 in
 {
   imports = [
     ./1password.nix
   ];
 
-  options.modules.security = {
+  options.my.security = {
     enable = lib.mkEnableOption "Security tooling";
   };
 
   config = lib.mkIf cfg.enable {
-    modules.security.onepassword.enable = true;
+    my.security.onepassword.enable = true;
   };
 }

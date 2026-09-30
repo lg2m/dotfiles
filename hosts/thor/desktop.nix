@@ -1,6 +1,6 @@
 { lib, config, ... }:
 {
-  config = lib.mkIf config.modules.hyprland.enable {
+  config = lib.mkIf config.my.hyprland.enable {
     services = {
       displayManager = {
         sddm = {

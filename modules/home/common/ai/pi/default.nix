@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.modules.ai.pi;
+  cfg = config.my.ai.pi;
 in
 {
-  options.modules.ai.pi = {
+  options.my.ai.pi = {
     enable = lib.mkEnableOption "Pi coding agent CLI";
   };
 

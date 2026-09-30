@@ -1,9 +1,9 @@
 { lib, config, ... }:
 let
-  cfg = config.modules.ssh;
+  cfg = config.my.ssh;
 in
 {
-  options.modules.ssh = {
+  options.my.ssh = {
     enable = lib.mkEnableOption "";
     localHost = lib.mkOption {
       type = lib.types.str;

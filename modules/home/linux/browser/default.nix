@@ -5,7 +5,7 @@
   ...
 }:
 let
-  cfg = config.modules.browser;
+  cfg = config.my.browser;
 
   heliumPkg = pkgs.helium-browser;
 
@@ -17,7 +17,7 @@ let
   };
 in
 {
-  options.modules.browser = {
+  options.my.browser = {
     enable = lib.mkEnableOption "Enable the shared browser module.";
 
     setDefault = lib.mkOption {
@@ -48,7 +48,7 @@ in
     assertions = [
       {
         assertion = pkgs.stdenv.hostPlatform.isLinux;
-        message = "modules.browser currently targets Linux/Home Manager environments only.";
+        message = "my.browser currently targets Linux/Home Manager environments only.";
       }
     ];
 
@@ -69,7 +69,7 @@ in
       DEFAULT_BROWSER = lib.getExe heliumPkg;
     };
 
-    modules.hyprland.apps.browser = lib.mkIf cfg.setDefault (lib.mkDefault (lib.getExe heliumPkg));
+    my.hyprland.apps.browser = lib.mkIf cfg.setDefault (lib.mkDefault (lib.getExe heliumPkg));
 
     xdg.mimeApps.defaultApplications = lib.mkIf cfg.setDefault {
       "text/html" = "helium.desktop";

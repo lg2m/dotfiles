@@ -5,14 +5,14 @@
   ...
 }:
 let
-  cfg = config.modules.media;
+  cfg = config.my.media;
 
   enabledPkgs = lib.flatten [
     (lib.optional cfg.stremio.enable cfg.stremio.package)
   ];
 in
 {
-  options.modules.media = {
+  options.my.media = {
     enable = lib.mkEnableOption "Install media apps via Home Manager";
 
     stremio = {
@@ -33,9 +33,9 @@ in
       {
         assertion = cfg.stremio.enable;
         message = ''
-          modules.media.enable is true, but no media apps were enabled.
+          my.media.enable is true, but no media apps were enabled.
           Enable at least one of:
-            modules.media.stremio.enable
+            my.media.stremio.enable
         '';
       }
     ];

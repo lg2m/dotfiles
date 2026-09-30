@@ -1,6 +1,6 @@
 { lib, config, ... }:
 let
-  cfg = config.modules.ghostty;
+  cfg = config.my.ghostty;
 
   # Single source of truth for ghostty settings.
   settings = {
@@ -47,7 +47,7 @@ let
   renderedConfig = lib.concatStringsSep "\n" (lib.mapAttrsToList renderEntry settings) + "\n";
 in
 {
-  options.modules.ghostty = {
+  options.my.ghostty = {
     enable = lib.mkEnableOption "Enable ghostty terminal configuration.";
 
     installPackage = lib.mkOption {

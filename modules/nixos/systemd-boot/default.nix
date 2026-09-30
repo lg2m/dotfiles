@@ -1,9 +1,9 @@
 { lib, config, ... }:
 let
-  cfg = config.modules.systemd-boot;
+  cfg = config.my.systemd-boot;
 in
 {
-  options.modules.systemd-boot = {
+  options.my.systemd-boot = {
     enable = lib.mkEnableOption "Enable systemd-boot as the system bootloader.";
 
     efiCanTouchVariables = lib.mkOption {

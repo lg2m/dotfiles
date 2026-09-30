@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.modules.ai.claude-code;
+  cfg = config.my.ai.claude-code;
 in
 {
-  options.modules.ai.claude-code = {
+  options.my.ai.claude-code = {
     enable = lib.mkEnableOption "Claude Code AI coding assistant";
   };
 

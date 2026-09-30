@@ -1,9 +1,9 @@
 { lib, config, ... }:
 let
-  cfg = config.modules.sudo-rs;
+  cfg = config.my.sudo-rs;
 in
 {
-  options.modules.sudo-rs = {
+  options.my.sudo-rs = {
     enable = lib.mkEnableOption "Use sudo-rs instead of traditional sudo.";
 
     wheelNeedsPassword = lib.mkOption {

@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.modules.hyprland;
+  cfg = config.my.hyprland;
 in
 {
-  options.modules.hyprland = {
+  options.my.hyprland = {
     enable = lib.mkEnableOption "Enable shared Hyprland system foundations.";
   };
 

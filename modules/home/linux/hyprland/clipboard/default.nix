@@ -5,12 +5,12 @@
   ...
 }:
 let
-  hyprCfg = config.modules.hyprland;
-  cfg = config.modules.hyprland.clipboard;
-  yaziEnabled = config.modules.yazi.enable;
+  hyprCfg = config.my.hyprland;
+  cfg = config.my.hyprland.clipboard;
+  yaziEnabled = config.my.yazi.enable;
 in
 {
-  options.modules.hyprland.clipboard = {
+  options.my.hyprland.clipboard = {
     enable = (lib.mkEnableOption "Enable Wayland clipboard utilities for Hyprland sessions.") // {
       default = true;
     };

@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.modules.opencode-server;
+  cfg = config.my.opencode-server;
 in
 {
-  options.modules.opencode-server = {
+  options.my.opencode-server = {
     enable = lib.mkEnableOption "Headless OpenCode server (`opencode serve`)";
 
     package = lib.mkOption {
@@ -65,7 +65,7 @@ in
     assertions = [
       {
         assertion = cfg.tailscaleServe -> config.services.tailscale.enable;
-        message = "modules.opencode-server.tailscaleServe requires services.tailscale.enable = true.";
+        message = "my.opencode-server.tailscaleServe requires services.tailscale.enable = true.";
       }
     ];
 

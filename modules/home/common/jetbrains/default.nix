@@ -5,7 +5,7 @@
   ...
 }:
 let
-  cfg = config.modules.jetbrains;
+  cfg = config.my.jetbrains;
 
   enabledPkgs = lib.flatten [
     (lib.optional cfg.clion.enable cfg.clion.package)
@@ -14,7 +14,7 @@ let
   ];
 in
 {
-  options.modules.jetbrains = {
+  options.my.jetbrains = {
     enable = lib.mkEnableOption "Install JetBrains tools via Home Manager";
 
     clion = {
@@ -59,11 +59,11 @@ in
       {
         assertion = cfg.clion.enable || cfg.datagrip.enable || cfg.idea.enable;
         message = ''
-          modules.jetbrains.enable is true, but no JetBrains apps were enabled.
+          my.jetbrains.enable is true, but no JetBrains apps were enabled.
           Enable at least one of:
-            modules.jetbrains.clion.enable
-            modules.jetbrains.datagrip.enable
-            modules.jetbrains.idea.enable
+            my.jetbrains.clion.enable
+            my.jetbrains.datagrip.enable
+            my.jetbrains.idea.enable
         '';
       }
     ];

@@ -4,10 +4,10 @@
   ...
 }:
 let
-  cfg = config.modules.core;
+  cfg = config.my.core;
 in
 {
-  options.modules.core = {
+  options.my.core = {
     enable = lib.mkEnableOption "";
 
     username = lib.mkOption {

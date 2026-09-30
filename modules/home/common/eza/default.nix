@@ -1,9 +1,9 @@
 { lib, config, ... }:
 let
-  cfg = config.modules.eza;
+  cfg = config.my.eza;
 in
 {
-  options.modules.eza.enable = lib.mkEnableOption "";
+  options.my.eza.enable = lib.mkEnableOption "";
 
   config = lib.mkIf cfg.enable {
     programs.eza = {

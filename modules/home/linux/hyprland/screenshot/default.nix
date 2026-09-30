@@ -5,11 +5,11 @@
   ...
 }:
 let
-  hyprCfg = config.modules.hyprland;
-  cfg = config.modules.hyprland.screenshot;
+  hyprCfg = config.my.hyprland;
+  cfg = config.my.hyprland.screenshot;
 in
 {
-  options.modules.hyprland.screenshot = {
+  options.my.hyprland.screenshot = {
     enable = (lib.mkEnableOption "Enable screenshot tooling for Hyprland sessions.") // {
       default = true;
     };

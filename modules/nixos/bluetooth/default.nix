@@ -1,9 +1,9 @@
 { lib, config, ... }:
 let
-  cfg = config.modules.bluetooth;
+  cfg = config.my.bluetooth;
 in
 {
-  options.modules.bluetooth = {
+  options.my.bluetooth = {
     enable = lib.mkEnableOption "Enable Bluetooth support and Blueman applet.";
 
     powerOnBoot = lib.mkOption {

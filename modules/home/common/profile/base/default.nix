@@ -5,14 +5,14 @@
   ...
 }:
 let
-  cfg = config.modules.profile.base;
+  cfg = config.my.profile.base;
 in
 {
-  options.modules.profile.base.enable =
+  options.my.profile.base.enable =
     lib.mkEnableOption "the shared baseline home profile (common toggles + packages)";
 
   config = lib.mkIf cfg.enable {
-    modules = {
+    my = {
       # Development
       direnv.enable = lib.mkDefault true;
       vcs = {

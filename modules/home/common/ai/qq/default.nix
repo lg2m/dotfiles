@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.modules.ai.qq;
+  cfg = config.my.ai.qq;
 in
 {
-  options.modules.ai.qq = {
+  options.my.ai.qq = {
     enable = lib.mkEnableOption "QQ terminal-native agent harness";
   };
 

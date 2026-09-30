@@ -5,7 +5,7 @@
   ...
 }:
 let
-  cfg = config.modules.networkmanager;
+  cfg = config.my.networkmanager;
   vpn = cfg.merakiVpn;
 
   # strongSwan >= 6 builds without IKEv1 unless --enable-ikev1 is passed, and
@@ -17,7 +17,7 @@ let
   networkmanager-l2tp = pkgs.networkmanager-l2tp.override { strongswan = strongswanIkev1; };
 in
 {
-  options.modules.networkmanager = {
+  options.my.networkmanager = {
     enable = lib.mkEnableOption "Enable NetworkManager support";
 
     merakiVpn = {

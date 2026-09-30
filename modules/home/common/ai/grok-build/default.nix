@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.modules.ai.grok-build;
+  cfg = config.my.ai.grok-build;
 in
 {
-  options.modules.ai.grok-build = {
+  options.my.ai.grok-build = {
     enable = lib.mkEnableOption "Grok Build AI coding assistant";
   };
 

@@ -1,9 +1,9 @@
 { lib, config, ... }:
 let
-  cfg = config.modules.vcs.jj;
+  cfg = config.my.vcs.jj;
 in
 {
-  options.modules.vcs.jj.enable = lib.mkEnableOption "Jujutsu version control configuration";
+  options.my.vcs.jj.enable = lib.mkEnableOption "Jujutsu version control configuration";
 
   config = lib.mkIf cfg.enable {
     programs.jujutsu = {

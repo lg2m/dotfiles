@@ -5,11 +5,11 @@
   ...
 }:
 let
-  hyprCfg = config.modules.hyprland;
-  cfg = config.modules.hyprland.yofi;
+  hyprCfg = config.my.hyprland;
+  cfg = config.my.hyprland.yofi;
 in
 {
-  options.modules.hyprland.yofi = {
+  options.my.hyprland.yofi = {
     enable = (lib.mkEnableOption "Enable yofi launcher for Hyprland sessions.") // {
       default = true;
     };

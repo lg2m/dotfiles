@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.modules.pipewire;
+  cfg = config.my.pipewire;
 in
 {
-  options.modules.pipewire = {
+  options.my.pipewire = {
     enable = lib.mkEnableOption "Enable Pipewire Audio & Video service.";
 
     goxlr = lib.mkOption {

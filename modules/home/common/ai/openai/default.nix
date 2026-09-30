@@ -5,7 +5,7 @@
   ...
 }:
 let
-  cfg = config.modules.ai.openai;
+  cfg = config.my.ai.openai;
 
   codexVersion = "0.153.4";
 
@@ -33,7 +33,7 @@ let
   );
 in
 {
-  options.modules.ai.openai = {
+  options.my.ai.openai = {
     codex.enable = lib.mkEnableOption "OpenAI Codex CLI coding assistant";
 
     # Unofficial repackaging of OpenAI's signed Linux ChatGPT/Codex desktop app

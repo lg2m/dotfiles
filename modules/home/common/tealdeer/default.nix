@@ -1,9 +1,9 @@
 { lib, config, ... }:
 let
-  cfg = config.modules.tealdeer;
+  cfg = config.my.tealdeer;
 in
 {
-  options.modules.tealdeer.enable = lib.mkEnableOption "";
+  options.my.tealdeer.enable = lib.mkEnableOption "";
 
   config = lib.mkIf cfg.enable {
     programs.tealdeer = {

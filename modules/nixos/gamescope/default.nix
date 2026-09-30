@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.modules.gamescope;
+  cfg = config.my.gamescope;
 in
 {
-  options.modules.gamescope = {
+  options.my.gamescope = {
     enable = lib.mkEnableOption "";
   };
 

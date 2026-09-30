@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.modules.ai.plannotator;
+  cfg = config.my.ai.plannotator;
 in
 {
-  options.modules.ai.plannotator = {
+  options.my.ai.plannotator = {
     enable = lib.mkEnableOption "Plannotator interactive code review tool";
   };
 

@@ -5,8 +5,8 @@
   ...
 }:
 let
-  hyprCfg = config.modules.hyprland;
-  cfg = config.modules.hyprland.awww;
+  hyprCfg = config.my.hyprland;
+  cfg = config.my.hyprland.awww;
   wallpapersDir = ../../../../../wallpapers;
   cycleScript = pkgs.writeShellScriptBin "awww-wallpaper-cycle" ''
     wallpapers_dir="${config.xdg.configHome}/hypr/wallpapers"
@@ -51,7 +51,7 @@ let
   '';
 in
 {
-  options.modules.hyprland.awww = {
+  options.my.hyprland.awww = {
     enable = (lib.mkEnableOption "Enable awww wallpaper management for Hyprland sessions.") // {
       default = true;
     };

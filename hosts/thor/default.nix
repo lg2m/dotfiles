@@ -123,7 +123,7 @@
     ssh.startAgent = true;
   };
 
-  modules = {
+  my = {
     bluetooth.enable = true;
     core = {
       enable = true;

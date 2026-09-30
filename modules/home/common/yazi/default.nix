@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.modules.yazi;
+  cfg = config.my.yazi;
 in
 {
-  options.modules.yazi.enable = lib.mkEnableOption "";
+  options.my.yazi.enable = lib.mkEnableOption "";
 
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [

@@ -5,11 +5,11 @@
   ...
 }:
 let
-  hyprCfg = config.modules.hyprland;
-  cfg = config.modules.hyprland.mako;
+  hyprCfg = config.my.hyprland;
+  cfg = config.my.hyprland.mako;
 in
 {
-  options.modules.hyprland.mako = {
+  options.my.hyprland.mako = {
     enable = (lib.mkEnableOption "Enable Mako notifications for Hyprland sessions.") // {
       default = true;
     };

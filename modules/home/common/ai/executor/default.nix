@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.modules.ai.executor;
+  cfg = config.my.ai.executor;
 in
 {
-  options.modules.ai.executor = {
+  options.my.ai.executor = {
     enable = lib.mkEnableOption "Executor local CLI for AI tool integrations";
   };
 

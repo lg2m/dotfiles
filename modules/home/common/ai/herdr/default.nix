@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.modules.ai.herdr;
+  cfg = config.my.ai.herdr;
 in
 {
-  options.modules.ai.herdr = {
+  options.my.ai.herdr = {
     enable = lib.mkEnableOption "Herdr terminal workspace manager for AI coding agents";
   };
 

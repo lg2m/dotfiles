@@ -5,14 +5,14 @@
   ...
 }:
 let
-  cfg = config.modules.hyprland.eww;
+  cfg = config.my.hyprland.eww;
 in
 {
-  options.modules.hyprland.eww = {
+  options.my.hyprland.eww = {
     enable = lib.mkEnableOption "Enable Eww bar for Hyprland sessions.";
   };
 
-  config = lib.mkIf (config.modules.hyprland.enable && cfg.enable) {
+  config = lib.mkIf (config.my.hyprland.enable && cfg.enable) {
     home.packages = [
       pkgs.eww
       pkgs.playerctl

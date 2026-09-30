@@ -5,11 +5,11 @@
   ...
 }:
 let
-  hyprCfg = config.modules.hyprland;
-  cfg = config.modules.hyprland.hyprlock;
+  hyprCfg = config.my.hyprland;
+  cfg = config.my.hyprland.hyprlock;
 in
 {
-  options.modules.hyprland.hyprlock = {
+  options.my.hyprland.hyprlock = {
     enable = (lib.mkEnableOption "Enable hyprlock screen locking for Hyprland sessions.") // {
       default = true;
     };

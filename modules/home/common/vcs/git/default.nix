@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.modules.vcs.git;
+  cfg = config.my.vcs.git;
 in
 {
-  options.modules.vcs.git.enable = lib.mkEnableOption "Git version control configuration";
+  options.my.vcs.git.enable = lib.mkEnableOption "Git version control configuration";
 
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [

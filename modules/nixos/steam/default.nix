@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.modules.steam;
+  cfg = config.my.steam;
 in
 {
-  options.modules.steam = {
+  options.my.steam = {
     enable = lib.mkEnableOption "Enable the Steam application";
   };
 

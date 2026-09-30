@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.modules.ai.opencode;
+  cfg = config.my.ai.opencode;
 in
 {
-  options.modules.ai.opencode = {
+  options.my.ai.opencode = {
     enable = lib.mkEnableOption "OpenCode AI coding assistant";
   };
 

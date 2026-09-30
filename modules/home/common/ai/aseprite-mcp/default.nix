@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.modules.ai.aseprite-mcp;
+  cfg = config.my.ai.aseprite-mcp;
 in
 {
-  options.modules.ai.aseprite-mcp = {
+  options.my.ai.aseprite-mcp = {
     enable = lib.mkEnableOption "Aseprite MCP integration for pixel-art tools";
     workspace = lib.mkOption {
       type = lib.types.str;
@@ -22,7 +22,7 @@ in
 
     # Codex owns its mutable config. Update only this server using its CLI,
     # preserving authentication, trusted projects, and other integrations.
-    home.activation.asepriteMcp = lib.mkIf config.modules.ai.openai.codex.enable (
+    home.activation.asepriteMcp = lib.mkIf config.my.ai.openai.codex.enable (
       lib.hm.dag.entryAfter [ "linkGeneration" ] ''
         run ${pkgs.coreutils}/bin/mkdir -p ${lib.escapeShellArg cfg.workspace}
         run ${config.home.profileDirectory}/bin/codex mcp add aseprite \

@@ -1,9 +1,9 @@
 { lib, config, ... }:
 let
-  cfg = config.modules.dbus;
+  cfg = config.my.dbus;
 in
 {
-  options.modules.dbus = {
+  options.my.dbus = {
     enable = lib.mkEnableOption "Enable the D-Bus message bus daemon.";
 
     implementation = lib.mkOption {

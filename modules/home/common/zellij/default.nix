@@ -1,9 +1,9 @@
 { lib, config, ... }:
 let
-  cfg = config.modules.zellij;
+  cfg = config.my.zellij;
 in
 {
-  options.modules.zellij.enable = lib.mkEnableOption "";
+  options.my.zellij.enable = lib.mkEnableOption "";
 
   config = lib.mkIf cfg.enable {
     programs.zellij = {
