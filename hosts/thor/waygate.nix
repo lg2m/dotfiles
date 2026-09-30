@@ -1,6 +1,5 @@
-# Host-specific companion to nix/modules/host.nix, for thor's module tree.
-_:
-{
+# Waygate libvirt host integration (module: modules/nixos/waygate.nix).
+_: {
   services.waygate.host = {
     enable = true;
     users = [ "zmeyer" ];

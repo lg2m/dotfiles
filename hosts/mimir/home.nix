@@ -8,8 +8,7 @@ let
 in
 {
   imports = [
-    ../../modules/home/shared
-    ../../modules/home/mimir
+    ./home-hyprland.nix
   ];
 
   modules = {

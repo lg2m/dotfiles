@@ -1,7 +1,8 @@
 { pkgs, ... }:
 {
   imports = [
-    ./hardware-configuration.nix
+    ./hardware.nix
+    ./github-runners.nix
   ];
 
   users.users = {
@@ -14,6 +15,7 @@
         "audio"
       ];
       openssh.authorizedKeys.keys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILd4BrvWfGcQCwmdhvUkJ7P81ftqoGQ6vJsUs6+6IFPm thor"
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFp93ayCGKzh1aqE7pissZySnkGClHK023SfUoYIHnQ3 syn0201"
       ];
       shell = pkgs.zsh;
@@ -23,6 +25,7 @@
   programs.zsh.enable = true;
 
   boot = {
+    kernelModules = [ "uinput" ];
     kernelParams = [
       "quiet"
       "splash"
@@ -43,54 +46,9 @@
     kernelPackages = pkgs.linuxPackages_latest;
   };
 
-  environment.etc."crypttab".text = ''
-    data UUID=c6dd0f62-22ce-48b7-b048-9e22be9803a0 /root/.keys/data.key luks
-    scratch UUID=aae545d4-3821-4a8e-af7d-2bb2c1458dfc /root/.keys/data.key luks
-  '';
-
-  fileSystems = {
-    "/data" = {
-      device = "/dev/mapper/data";
-      fsType = "ext4";
-    };
-    "/scratch" = {
-      device = "/dev/mapper/scratch";
-      fsType = "ext4";
-    };
-  };
-
-  systemd.tmpfiles.rules = [
-    "d /data 2775 zmeyer users -"
-    "d /scratch 2775 zmeyer users -"
-  ];
-
   # Networking
   networking = {
-    hostName = "thor";
-    firewall = {
-      # Mesh brokers: canonical checkout, Lane C and its two review worktrees.
-      # Permit the relay's docker0 path only; these ports are not opened on LAN/VPN.
-      interfaces.docker0.allowedTCPPorts = [
-        34111
-        35111
-        45911
-        56411
-      ];
-      # Isolated Docker bridges have no host address/connected reverse route.
-      # Keep strict rpfilter elsewhere and permit loose reverse-path checks only
-      # on Mesh's explicitly named mesh* bridges. Docker's isolation rules remain.
-      extraCommands = ''
-        iptables -t mangle -I nixos-fw-rpfilter 1 -i mesh+ -m rpfilter --loose --validmark -j RETURN
-      '';
-      extraStopCommands = ''
-        iptables -t mangle -D nixos-fw-rpfilter -i mesh+ -m rpfilter --loose --validmark -j RETURN 2>/dev/null || true
-      '';
-    };
-    hosts = {
-      "127.0.0.1" = [
-        "iam-service"
-      ];
-    };
+    hostName = "mimir";
   };
 
   # Essential system packages
@@ -104,22 +62,56 @@
   # Security
   security.polkit.enable = true;
 
+  # AMD graphics (in-kernel amdgpu driver)
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+  };
+
   # Docker
   virtualisation.docker.enable = true;
 
   # Services
   services = {
-    # dbus.enable = true;
-    openssh.enable = true;
-    # tailscale.enable = true;
+    openssh = {
+      enable = true;
+      openFirewall = false;
+      settings = {
+        AllowUsers = [ "zmeyer" ];
+        KbdInteractiveAuthentication = false;
+        PasswordAuthentication = false;
+        PermitRootLogin = "no";
+      };
+    };
   };
 
   # Enable programs
   programs = {
     dconf.enable = true;
     firefox.enable = true;
+    mosh = {
+      enable = true;
+      openFirewall = false;
+    };
     ssh.startAgent = true;
   };
+
+  # Enable the X11 windowing system.
+  # You can disable this if you're only using the Wayland session.
+  services.xserver.enable = true;
+
+  # Enable the KDE Plasma Desktop Environment.
+  services.displayManager.sddm.enable = true;
+  services.desktopManager.plasma6.enable = true;
+
+  # Configure keymap in X11
+  services.xserver.xkb = {
+    layout = "us";
+    variant = "";
+  };
+
+  # Enable CUPS to print documents.
+  services.printing.enable = true;
 
   modules = {
     bluetooth.enable = true;
@@ -129,19 +121,12 @@
     };
     dbus.enable = true;
     fontconfig.enable = true;
-    gamemode.enable = false;
-    gamescope.enable = false;
-    hyprland.enable = true;
-    networkmanager = {
+    #hyprland.enable = true;
+    networkmanager.enable = true;
+    pipewire = {
       enable = true;
-      # Secrets live in /etc/nm-secrets/meraki-vpn.env (root-only, untracked).
-      merakiVpn.enable = true;
+      #  goxlr = false;
     };
-    nvidia = {
-      enable = true;
-      enable32Bit = true;
-    };
-    pipewire.enable = true;
     security.enable = true;
     security.onepassword = {
       enable = true;
@@ -149,11 +134,14 @@
       polkitPolicyOwners = [ "zmeyer" ];
     };
     sudo-rs.enable = true;
-    steam.enable = true;
     systemd-boot.enable = true;
     tailscale = {
       enable = true;
       extraSetFlags = [ "--accept-dns" ];
+    };
+    opencode-server = {
+      enable = true;
+      user = "zmeyer";
     };
   };
 

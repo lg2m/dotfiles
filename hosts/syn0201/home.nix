@@ -6,10 +6,6 @@
   ...
 }:
 {
-  imports = [
-    ../../modules/home/shared
-    ../../modules/home/syn0201
-  ];
 
   modules = {
     # Baseline (common toggles + packages live in profile/base)

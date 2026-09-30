@@ -6,10 +6,6 @@ let
   );
 in
 {
-  imports = map (n: ./${n}) (
-    builtins.filter (n: n != "default.nix") (builtins.attrNames (builtins.readDir ./.))
-  );
-
   systemd.tmpfiles.rules = [
     "d /etc/github-runner 0700 root root -"
   ];

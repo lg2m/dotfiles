@@ -9,8 +9,7 @@ let
 in
 {
   imports = [
-    ../../modules/home/shared
-    ../../modules/home/thor
+    ./home-hyprland.nix
   ];
 
   modules = {
