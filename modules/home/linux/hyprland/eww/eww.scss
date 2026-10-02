@@ -1,371 +1,259 @@
-// --------------------------------------------------
-// Rose Pine palette
-// --------------------------------------------------
+// Minimal flat bar, Rose Pine.
+// One surface, no nested boxes, colour only where it carries meaning.
+
 $base: #191724;
 $surface: #1f1d2e;
 $overlay: #26233a;
+$highlight-low: #21202e;
+$highlight-med: #403d52;
 $muted: #6e6a86;
 $subtle: #908caa;
 $text: #e0def4;
-$rose: #eb6f92;
-$pine: #31748f;
+$love: #eb6f92;
 $gold: #f6c177;
+$rose: #ebbcba;
+$pine: #31748f;
 $foam: #9ccfd8;
 $iris: #c4a7e7;
-$rose-light: #ebbcba;
-$highlight: #403d52;
 
-// --------------------------------------------------
-// Derived surfaces
-// --------------------------------------------------
-$bg-main: rgba($base, 0.88);
-$bg-panel: rgba($surface, 0.82);
-$bg-panel-strong: rgba($overlay, 0.92);
-$bg-soft: rgba($overlay, 0.55);
+$radius: 6px;
 
-$border-subtle: rgba($text, 0.05);
-
-$shadow-lg: 0 14px 40px rgba($base, 0.52);
-$shadow-sm: 0 4px 12px rgba($base, 0.18);
-
-$glow-pine: 0 0 0 1px rgba($pine, 0.18), 0 8px 24px rgba($pine, 0.16);
-$glow-iris: 0 0 0 1px rgba($iris, 0.14), 0 8px 24px rgba($iris, 0.12);
-
-$radius-xl: 22px;
-$radius-lg: 16px;
-$radius-md: 12px;
-$radius-pill: 999px;
-
-// --------------------------------------------------
-// Base reset
-// --------------------------------------------------
 * {
   all: unset;
-  font-family: "Maple Mono NF", "JetBrainsMono Nerd Font", monospace;
+  font-family: "Maple Mono NF", "FiraCode Nerd Font", monospace;
   font-size: 13px;
   color: $text;
 }
 
-window {
-  background: transparent;
+tooltip {
+  background: $surface;
+  border: 1px solid $highlight-med;
+  border-radius: $radius;
+  padding: 4px 8px;
+
+  label {
+    color: $text;
+    font-size: 12px;
+  }
 }
 
-// --------------------------------------------------
-// Top-level shell
-// --------------------------------------------------
-.bar-shell {
-  margin: 10px 14px 6px 14px;
-  padding: 8px 10px;
-  border-radius: $radius-xl;
-  border: 1px solid $border-subtle;
-  background: linear-gradient(180deg,
-      rgba($surface, 0.86) 0%,
-      rgba($base, 0.92) 100%);
-  box-shadow:
-    $shadow-lg,
-    inset 0 1px 0 rgba($text, 0.05),
-    inset 0 -1px 0 rgba($base, 0.45);
+// ------------------------------------------------------------ bar
+
+.bar {
+  background: rgba($base, 0.94);
+  border-bottom: 1px solid rgba($highlight-med, 0.6);
+  padding: 0 10px;
 }
 
-// Do not force every group to reserve lots of space.
-.bar-group {
-  min-width: 0;
+.icon {
+  margin-right: 6px;
 }
 
-.left-cluster,
-.center-cluster,
-.right-cluster,
-.center-stack {
-  min-width: 0;
+button {
+  border-radius: $radius;
+  transition: background 120ms ease, color 120ms ease;
 }
 
-.center-cluster {
-  margin: 0 12px;
-}
-
-// Utility classes for layout safety
-.group-tight {
-  min-width: 0;
-}
-
-.group-grow {
-  min-width: 0;
-}
-
-.group-fixed {
-  min-width: 0;
-}
-
-// --------------------------------------------------
-// Shared container blocks
-// --------------------------------------------------
-.workspace-strip,
-.launcher-row,
-.session-row,
-.stats-row,
-.music-row,
-.clock-wrap,
-.title-box,
-.git-pill {
-  padding: 3px;
-  margin: 0 4px;
-  border-radius: $radius-lg;
-  border: 1px solid $border-subtle;
-  background: linear-gradient(180deg,
-      rgba($overlay, 0.68) 0%,
-      rgba($surface, 0.76) 100%);
-  box-shadow:
-    inset 0 1px 0 rgba($text, 0.03),
-    $shadow-sm;
-}
-
-// --------------------------------------------------
-// Workspaces
-// --------------------------------------------------
-.workspace-strip {
-  padding: 4px;
-}
+// ------------------------------------------------------------ left
 
 .ws {
-  min-width: 24px;
-  margin: 0 2px;
-  padding: 6px 0;
-  border-radius: $radius-md;
-  background: transparent;
+  min-width: 26px;
+  padding: 2px 0;
+  margin: 4px 0;
   color: $muted;
-  font-size: 11px;
-  font-weight: 800;
-  transition: 160ms ease;
+  font-weight: bold;
+
+  &:hover {
+    background: $highlight-low;
+    color: $text;
+  }
+
+  &.active {
+    background: $overlay;
+    color: $foam;
+    box-shadow: inset 0 -2px 0 $foam;
+  }
 }
 
-.ws:hover,
-.ws:focus {
-  background: rgba($foam, 0.10);
-  color: $foam;
-  box-shadow: inset 0 0 0 1px rgba($foam, 0.10);
+.git {
+  color: $subtle;
+
+  label {
+    color: $subtle;
+  }
+
+  .icon {
+    color: $gold;
+  }
 }
 
-.ws.active {
-  background: linear-gradient(180deg,
-      rgba($foam, 0.92) 0%,
-      rgba($pine, 0.88) 100%);
-  color: $base;
-  box-shadow:
-    0 8px 18px rgba($pine, 0.28),
-    inset 0 1px 0 rgba($text, 0.22);
+// ------------------------------------------------------------ center
+
+.title {
+  color: $subtle;
 }
 
-.ws.occupied {
-  color: $text;
-}
+// ------------------------------------------------------------ right
 
-.ws.empty {
-  color: rgba($subtle, 0.75);
-}
+.media {
+  .media-btn {
+    min-width: 22px;
+    margin: 4px 0;
+    color: $subtle;
 
-// --------------------------------------------------
-// Launcher / session buttons
-// --------------------------------------------------
-.launcher-row,
-.session-row {
-  padding: 4px;
-}
+    &:hover {
+      background: $highlight-low;
+      color: $text;
+    }
+  }
 
-.launch,
-.session {
-  margin: 0 2px;
-  padding: 6px 10px;
-  border-radius: $radius-md;
-  background: transparent;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  transition: 160ms ease;
-}
+  .media-text {
+    margin-left: 6px;
+    color: $iris;
 
-.launch {
-  color: $foam;
-}
-
-.launch:hover,
-.launch:focus {
-  background: rgba($foam, 0.11);
-  color: $text;
-  box-shadow: inset 0 0 0 1px rgba($foam, 0.10);
-}
-
-.session {
-  color: $gold;
-}
-
-.session:hover,
-.session:focus {
-  background: rgba($gold, 0.12);
-  color: $rose-light;
-  box-shadow: inset 0 0 0 1px rgba($gold, 0.10);
-}
-
-.session.danger {
-  color: $rose;
-}
-
-.session.danger:hover,
-.session.danger:focus {
-  background: rgba($rose, 0.14);
-  color: $rose-light;
-  box-shadow: inset 0 0 0 1px rgba($rose, 0.10);
-}
-
-// --------------------------------------------------
-// Stats
-// --------------------------------------------------
-.stats-row {
-  padding: 4px 6px;
+    &.paused {
+      color: $muted;
+    }
+  }
 }
 
 .stat {
-  margin: 0 2px;
-  padding: 5px 8px;
-  border-radius: $radius-md;
-  background: rgba($highlight, 0.32);
   color: $subtle;
-  font-size: 10px;
-  font-weight: 700;
-  transition: 140ms ease;
+
+  label {
+    color: $subtle;
+  }
+
+  .icon {
+    color: $muted;
+  }
+
+  &.hot label {
+    color: $love;
+  }
+
+  &.muted label {
+    color: $muted;
+  }
 }
 
-.stat:hover {
-  background: rgba($highlight, 0.46);
-  color: $text;
+.volume {
+  padding: 0 2px;
 }
 
-.stat.cpu {
-  color: $rose;
-  background: rgba($rose, 0.10);
+.tray menu {
+  background: $surface;
+  border: 1px solid $highlight-med;
+  border-radius: $radius;
+  padding: 4px;
+
+  menuitem {
+    padding: 4px 10px;
+    border-radius: 4px;
+
+    &:hover {
+      background: $overlay;
+    }
+  }
 }
 
-.stat.mem {
-  color: $iris;
-  background: rgba($iris, 0.10);
+.ind {
+  min-width: 24px;
+  margin: 4px 0;
+  color: $muted;
+
+  &:hover {
+    background: $highlight-low;
+    color: $text;
+  }
+
+  &.dnd-on {
+    color: $gold;
+  }
+
+  &.rec {
+    color: $love;
+  }
 }
 
-.stat.net {
-  color: $foam;
-  background: rgba($foam, 0.08);
-}
+.clock,
+.power {
+  padding: 2px 8px;
+  margin: 4px 0;
 
-// --------------------------------------------------
-// Window title
-// --------------------------------------------------
-.title-box {
-  padding: 3px 4px;
-  min-width: 0;
-  margin-right: 8px;
-}
-
-.title {
-  margin-left: 0;
-  padding: 6px 10px;
-  border-radius: $radius-md;
-  background: linear-gradient(180deg,
-      rgba($iris, 0.16) 0%,
-      rgba($overlay, 0.52) 100%);
-  color: $iris;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  box-shadow: inset 0 0 0 1px rgba($iris, 0.10);
-}
-
-// Clamp center modules
-.title-box {
-  min-width: 0;
-}
-
-.music-box {
-  min-width: 0;
-}
-
-.git-pill {
-  padding: 4px 6px;
-}
-
-// --------------------------------------------------
-// Music
-// --------------------------------------------------
-.music-row {
-  padding: 4px 8px 4px 5px;
-  border: 1px solid rgba($pine, 0.16);
-  background: linear-gradient(180deg,
-      rgba($pine, 0.16) 0%,
-      rgba($overlay, 0.72) 100%);
-  box-shadow: $glow-pine;
-  min-width: 0;
-}
-
-.center-stack .launcher-row {
-  margin-left: 8px;
-}
-
-.music-icon {
-  margin-right: 5px;
-  color: $foam;
-  font-size: 12px;
-}
-
-.music-text {
-  color: $text;
-  font-size: 10px;
-  font-weight: 700;
-}
-
-.git-pill .stat {
-  color: $foam;
-  background: rgba($pine, 0.10);
-}
-
-// --------------------------------------------------
-// Clock
-// --------------------------------------------------
-.clock-wrap {
-  padding: 3px;
-  border: 1px solid rgba($iris, 0.12);
-  box-shadow: $glow-iris;
+  &:hover,
+  &.open {
+    background: $overlay;
+  }
 }
 
 .clock {
-  margin: 0;
-  padding: 6px 10px;
-  border-radius: $radius-md;
-  background: linear-gradient(180deg,
-      rgba($overlay, 0.80) 0%,
-      rgba($surface, 0.60) 100%);
   color: $text;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  box-shadow: inset 0 1px 0 rgba($text, 0.05);
+  font-weight: bold;
 }
 
-// --------------------------------------------------
-// Optional text helpers
-// --------------------------------------------------
-.label-muted {
-  color: $muted;
+.power {
+  color: $love;
 }
 
-.label-soft {
-  color: $subtle;
+// ------------------------------------------------------------ popups
+
+.popup {
+  background: $surface;
+  border: 1px solid $highlight-med;
+  border-radius: 10px;
+  padding: 10px;
 }
 
-.accent-pine {
-  color: $foam;
+.cal {
+  padding: 4px;
+
+  // GtkCalendar
+  &.header {
+    color: $text;
+    font-weight: bold;
+  }
+
+  &.button {
+    color: $subtle;
+  }
+
+  &.highlight {
+    color: $muted;
+  }
+
+  &:selected {
+    background: $overlay;
+    color: $foam;
+    border-radius: 4px;
+  }
+
+  &:indeterminate {
+    color: $highlight-med;
+  }
 }
 
-.accent-iris {
-  color: $iris;
+.power-menu {
+  padding: 6px;
+  min-width: 190px;
 }
 
-.accent-rose {
-  color: $rose;
+.power-item {
+  padding: 7px 10px;
+
+  label {
+    color: $text;
+  }
+
+  .icon {
+    color: $subtle;
+  }
+
+  &:hover {
+    background: $overlay;
+  }
+
+  &.danger:hover label {
+    color: $love;
+  }
 }

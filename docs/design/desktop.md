@@ -44,6 +44,32 @@ my.hyprland = {
 };
 ```
 
+### Bar (eww)
+
+`modules/home/linux/hyprland/eww/`. It runs as the `eww` systemd user service,
+starts with `graphical-session.target` and restarts on crash. `home-manager
+switch` restarts it automatically when `eww.yuck`/`eww.scss` change.
+
+| Action | How |
+|--------|-----|
+| Restart the bar | `Super+Shift+B` or `systemctl --user restart eww` |
+| Reload config in place | `eww reload` |
+| Debug | `eww logs`, `eww state`, `journalctl --user -u eww` |
+| Toggle do-not-disturb | `Super+N` or the bell icon (mako `do-not-disturb` mode) |
+
+Layout: workspaces (only occupied plus the active one; scroll to cycle) · git
+`repo:branch` of the focused window | window title | media · CPU/mem/net ·
+tray · rec/DND · volume (scroll / click to mute / right-click for the mixer) · clock
+(click for the calendar) · power menu.
+
+Data comes from event-driven listeners in `eww/scripts/`: the Hyprland socket2,
+`pactl subscribe`, `playerctl --follow`, and a 2s stats sampler. There's no
+per-second `hyprctl` polling. Each script is a `writeShellApplication` with
+its own runtime deps; Nix substitutes their paths into `eww.yuck` (`@hypr@` etc.).
+To iterate without switching, run a second instance:
+`eww -c /tmp/ewwt daemon && eww -c /tmp/ewwt open bar-main` with a copy of the
+built yuck (`nix build .#nixosConfigurations.thor.config.home-manager.users.zmeyer.xdg.configFile."eww/eww.yuck".source`).
+
 ### Validation
 
 ```sh

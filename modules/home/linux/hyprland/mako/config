@@ -39,3 +39,6 @@ border-color=#eb6f92ff
 background-color=#191724f2
 text-color=#ebbcbaff
 default-timeout=0
+
+[mode=do-not-disturb]
+invisible=1
