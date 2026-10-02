@@ -8,14 +8,14 @@
 assert lib.versionOlder python3Packages.mcp.version "2";
 python3Packages.buildPythonApplication {
   pname = "aseprite-mcp";
-  version = "0.7.0";
+  version = "0.9.0";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "MalloyTheDev";
     repo = "aseprite-mcp";
-    rev = "8caabf9ce240a040ca2c94d3d7366c9d8dd63653";
-    hash = "sha256-O+YhJsoo1sHoPBFuS8+hit2jYDhs3zS8GRfKhoYxvYg=";
+    tag = "v0.9.0";
+    hash = "sha256-yhLK++B5JXX2NN6N8emWrqXamGM5VAcjHLarUuvYkJE=";
   };
 
   build-system = [ python3Packages.hatchling ];

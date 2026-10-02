@@ -6,24 +6,24 @@
 }:
 
 let
-  version = "2.5.0";
+  version = "2.6.0";
 
   sources = {
     x86_64-linux = fetchurl {
       url = "https://github.com/schpet/linear-cli/releases/download/v${version}/linear-x86_64-unknown-linux-gnu.tar.xz";
-      hash = "sha256-YqzPHrNsMeiX+EkOgmGC8BK5pLOiwNO/jI3ekGA5w+o=";
+      hash = "sha256-u8udNlMIvDcooeyZE60YgPiMDOaHZzgyl+NIwFfzW40=";
     };
     aarch64-linux = fetchurl {
       url = "https://github.com/schpet/linear-cli/releases/download/v${version}/linear-aarch64-unknown-linux-gnu.tar.xz";
-      hash = "sha256-yN3X+0eP8jzXUgJutgnyXvkcw2yxtVkA258YL0rrR7U=";
+      hash = "sha256-VcxKaySJpAOtnrgPYS36hBKHv6FrmDkLtNTgcteeI2E=";
     };
     aarch64-darwin = fetchurl {
       url = "https://github.com/schpet/linear-cli/releases/download/v${version}/linear-aarch64-apple-darwin.tar.xz";
-      hash = "sha256-bRHrWg7iqhDSRiXSPGBb9WmHqUdB5gu5gX+HsSOpoAs=";
+      hash = "sha256-uavdS1rsFEWeQ0oomSA3V96K6EfwVerk8frue7H7wHg=";
     };
     x86_64-darwin = fetchurl {
       url = "https://github.com/schpet/linear-cli/releases/download/v${version}/linear-x86_64-apple-darwin.tar.xz";
-      hash = "sha256-9Xx6zJdMG8AcCsFBZYov04DjZ3a4XxXan8vy6CTAgjw=";
+      hash = "sha256-CKuhmvTwBinl6JqwQBfTHRhXP7ydySIoCChwL9riej8=";
     };
   };
 

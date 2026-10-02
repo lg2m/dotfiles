@@ -6,12 +6,12 @@
   rustPlatform,
 }:
 let
-  version = "0.153.4";
+  version = "0.160.0";
   src = fetchFromGitHub {
     owner = "openai";
     repo = "codex";
     tag = "rust-v${version}";
-    hash = "sha256-lHiDj5SodaM3mh8goMm6esfejeAT+Y3JJWrRnyj6sJo=";
+    hash = "sha256-UFPv9UK0MBYZfpZ3QlkTXa19ykHwIEo3JdwPtUUrJls=";
   };
 in
 codex.overrideAttrs (
@@ -19,11 +19,17 @@ codex.overrideAttrs (
     inherit version src;
     sourceRoot = "${src.name}/codex-rs";
 
+    # Upstream pins rustc 1.95; newer rustc in nixpkgs overflows the default
+    # query depth (128) laying out `connectors::list_connectors()`.
+    postPatch = (previousAttrs.postPatch or "") + ''
+      sed -i '1i #![recursion_limit = "256"]' chatgpt/src/lib.rs
+    '';
+
     cargoDeps = rustPlatform.fetchCargoVendor {
       inherit (previousAttrs) pname;
       inherit version src;
       sourceRoot = "${src.name}/codex-rs";
-      hash = "sha256-GG6kOXmCdq+bZLU2ul0DIVL8lDuweayvZvXn6+bcUZw=";
+      hash = "sha256-DMRbIOynO0wGXjBxaXZJNKorD9YQv3fAoRTZ4iZEIE4=";
     };
   }
 )
