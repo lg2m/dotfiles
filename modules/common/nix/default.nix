@@ -9,6 +9,7 @@
 }:
 let
   cfg = config.my.nix;
+  nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
 in
 {
   options.my.nix = {
@@ -36,15 +37,20 @@ in
         require-sigs = true;
         warn-dirty = false;
       }
-      # auto-optimise-store corrupts the store on darwin (NixOS/nix#7273).
       // lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+        # auto-optimise-store corrupts the store on darwin (NixOS/nix#7273).
         auto-optimise-store = true;
+        # NixOS renamed nix.nixPath -> nix.settings.nix-path; nix-darwin
+        # still uses nix.nixPath (set below).
+        nix-path = nixPath;
       };
       # Flakes only: pin `nixpkgs` in the registry and NIX_PATH to this
       # flake's input so `nix shell nixpkgs#x` and `<nixpkgs>` match the system.
       channel.enable = false;
       registry.nixpkgs.flake = inputs.nixpkgs;
-      nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
+    }
+    // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
+      inherit nixPath;
     };
   };
 }
