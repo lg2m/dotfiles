@@ -6,11 +6,11 @@
 
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "qq";
-  version = "0.1.4";
+  version = "0.1.6";
 
   src = fetchurl {
     url = "https://github.com/retsu-AI/qq/releases/download/v${finalAttrs.version}/qq-v${finalAttrs.version}-x86_64-unknown-linux-musl.tar.gz";
-    hash = "sha256-wYFdL5cAYsNQKGKSzt6w34gAtdco4/uCyJwnD993ThE=";
+    hash = "sha256-SIVUN01iH+ZrjjUzLxmTursxZklsFcA/jxn3p0kE7sY=";
   };
 
   dontBuild = true;
