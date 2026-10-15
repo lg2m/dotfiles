@@ -3,7 +3,6 @@
   imports = [
     ./aseprite-mcp
     ./claude-code
-    ./executor
     ./grok-build
     ./herdr
     ./openai

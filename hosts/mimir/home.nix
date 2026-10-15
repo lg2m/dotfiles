@@ -10,7 +10,6 @@
   my = {
     ai = {
       openai.codex.enable = true;
-      executor.enable = true;
       pi.enable = true;
     };
     browser.enable = true;

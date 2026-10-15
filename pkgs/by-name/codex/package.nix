@@ -6,12 +6,12 @@
   rustPlatform,
 }:
 let
-  version = "0.160.0";
+  version = "0.163.0";
   src = fetchFromGitHub {
     owner = "openai";
     repo = "codex";
     tag = "rust-v${version}";
-    hash = "sha256-UFPv9UK0MBYZfpZ3QlkTXa19ykHwIEo3JdwPtUUrJls=";
+    hash = "sha256-Fa9dfiGJy+uqSF4A0EM6AQQhhjQdu+jfhKzqXid9PNA=";
   };
 in
 codex.overrideAttrs (
@@ -29,7 +29,7 @@ codex.overrideAttrs (
       inherit (previousAttrs) pname;
       inherit version src;
       sourceRoot = "${src.name}/codex-rs";
-      hash = "sha256-DMRbIOynO0wGXjBxaXZJNKorD9YQv3fAoRTZ4iZEIE4=";
+      hash = "sha256-TG1fDHQCRDDbk+G0NS/9NTouJupq0Zisi4LIJY4SgYw=";
     };
   }
 )
