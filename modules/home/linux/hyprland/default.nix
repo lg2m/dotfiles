@@ -13,5 +13,6 @@
     ./yofi
     ./hyprlock
     ./hypridle
+    ./waydroid
   ];
 }

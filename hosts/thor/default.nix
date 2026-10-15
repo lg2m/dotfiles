@@ -24,6 +24,8 @@ _: {
       enable = true;
       enable32Bit = true;
     };
+    # Renders on the AMD iGPU (Waydroid can't use NVIDIA); see modules/nixos/waydroid.nix.
+    waydroid.enable = true;
   };
 
   system.stateVersion = "25.05";

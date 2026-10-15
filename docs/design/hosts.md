@@ -21,6 +21,8 @@ this page adds the human context.
   the firmware boot menu.
 - Mesh broker ports open only on `docker0` (`hosts/thor/networking.nix`).
 - Waygate libvirt integration (`hosts/thor/waygate.nix`).
+- Waydroid Android container (`my.waydroid` + `my.hyprland.waydroid`), rendering
+  on the AMD iGPU because Waydroid can't use NVIDIA.
 - Meraki L2TP VPN via NetworkManager (`my.networkmanager.merakiVpn`).
 
 ### mimir
