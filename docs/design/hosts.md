@@ -13,9 +13,12 @@ this page adds the human context.
 
 ### thor
 
-- `/data` and `/scratch`: LUKS2 on secondary NVMe drives, unlocked at boot
-  from `/root/.keys/data.key` (`hosts/thor/storage.nix`,
+- `/data`: LUKS2 on the 2 TB Crucial NVMe, unlocked at boot from
+  `/root/.keys/data.key` (`hosts/thor/storage.nix`,
   `scripts/setup-thor-storage`).
+- The 500 GB Samsung NVMe (serial S4P2NF0M304184W, formerly `/scratch`) is a
+  Windows disk with its own EFI partition. NixOS doesn't mount it; boot it from
+  the firmware boot menu.
 - Mesh broker ports open only on `docker0` (`hosts/thor/networking.nix`).
 - Waygate libvirt integration (`hosts/thor/waygate.nix`).
 - Meraki L2TP VPN via NetworkManager (`my.networkmanager.merakiVpn`).

@@ -55,18 +55,18 @@ Symptom: activation logs `failed to decrypt` and services are missing
 their secrets. The host key changed. Re-enroll:
 [secrets.md → Add or replace a recipient](secrets.md#add-or-replace-a-recipient).
 
-## thor's /data or /scratch won't unlock
+## thor's /data won't unlock
 
 The keyfile `/root/.keys/data.key` is missing or wrong. Unlock with the
-recovery passphrase set by `scripts/setup-thor-storage`:
+recovery passphrase set by `scripts/setup-thor-storage`. NVMe names can
+shift between boots, so find the device by UUID:
 
 ```sh
-sudo cryptsetup open /dev/nvme1n1p1 data
-sudo cryptsetup open /dev/nvme2n1p1 scratch
+sudo cryptsetup open /dev/disk/by-uuid/c6dd0f62-22ce-48b7-b048-9e22be9803a0 data
 ```
 
 To restore the keyfile, add a fresh one with
-`sudo cryptsetup luksAddKey /dev/nvme1n1p1 /root/.keys/data.key` (for each device).
+`sudo cryptsetup luksAddKey /dev/disk/by-uuid/c6dd0f62-22ce-48b7-b048-9e22be9803a0 /root/.keys/data.key`.
 
 ## Flake doesn't evaluate after an update
 
