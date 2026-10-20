@@ -1,49 +1,81 @@
-# Persistent organization runner; the token is loaded from a root-private local file.
+# Separate persistent fast/full queues; tokens remain root-private runtime files.
 { lib, pkgs, ... }:
+let
+  runner =
+    {
+      name,
+      user,
+      workspace,
+      label,
+      memory,
+    }:
+    {
+      enable = true;
+      inherit name user;
+      group = user;
+      url = "https://github.com/Waypoint-Interactive";
+      tokenFile = "/etc/idle-ci/github-token";
+      tokenType = "auto";
+      ephemeral = false;
+      replace = false;
+      workDir = "/var/lib/${workspace}";
+      extraLabels = [
+        "mimir"
+        "nixos"
+        label
+      ];
+      extraPackages = with pkgs; [
+        curl
+        jq
+        docker
+        which
+        util-linux
+        nodejs_24
+      ];
+      serviceOverrides = {
+        # Create the workspace before namespace setup, outside credential state.
+        StateDirectory = [ workspace ];
+        Slice = "github-runners.slice";
+        CPUQuota = "400%";
+        MemoryMax = memory;
+        MemorySwapMax = "1G";
+        # Nix and Docker need writable, host-visible temporary paths.
+        PrivateUsers = false;
+        PrivateTmp = false;
+        ReadWritePaths = [
+          "/tmp"
+          "/var/tmp"
+        ];
+        Restart = lib.mkForce "on-failure";
+        RestartSec = 10;
+      };
+    };
+  users = [
+    "waypoint-runner"
+    "waypoint-runner-full"
+  ];
+in
 {
-  users.groups.waypoint-runner = { };
-  users.users.waypoint-runner = {
+  users.groups = lib.genAttrs users (_: { });
+  users.users = lib.genAttrs users (user: {
     isSystemUser = true;
-    group = "waypoint-runner";
+    group = user;
     extraGroups = [ "docker" ];
-  };
-
-  services.github-runners.waypoint-mimir = {
-    enable = true;
-    name = "mimir-waypoint";
-    url = "https://github.com/Waypoint-Interactive";
-    tokenFile = "/etc/idle-ci/github-token";
-    tokenType = "auto";
-    ephemeral = false;
-    replace = false;
-    user = "waypoint-runner";
-    group = "waypoint-runner";
-    workDir = "/var/lib/waypoint-runner-work";
-    extraLabels = [
-      "mimir"
-      "nixos"
-      "waypoint-trusted"
-    ];
-    extraPackages = with pkgs; [
-      curl
-      jq
-      docker
-      which
-      util-linux
-      nodejs_24
-    ];
-    serviceOverrides = {
-      # Create the workspace before namespace setup; keep it outside credential state.
-      StateDirectory = [ "waypoint-runner-work" ];
-      Slice = "github-runners.slice";
-      CPUQuota = "400%";
-      MemoryMax = "12G";
-      MemorySwapMax = "1G";
-      # Docker-backed tests need host identity and matching bind-mount paths.
-      PrivateUsers = false;
-      PrivateTmp = false;
-      Restart = lib.mkForce "on-failure";
-      RestartSec = 10;
+  });
+  services.github-runners = {
+    waypoint-mimir = runner {
+      name = "mimir-waypoint";
+      user = "waypoint-runner";
+      workspace = "waypoint-runner-work";
+      label = "waypoint-trusted";
+      memory = "8G";
+    };
+    waypoint-mimir-full = runner {
+      name = "mimir-waypoint-full";
+      user = "waypoint-runner-full";
+      workspace = "waypoint-runner-full-work";
+      label = "waypoint-full";
+      memory = "10G";
     };
   };
 }

@@ -13,11 +13,14 @@ operator-started disposable VM design.
 
 ## Decision
 
-Use the standard NixOS services.github-runners module for one persistent registration
-named mimir-waypoint, scoped to https://github.com/Waypoint-Interactive. Its dedicated
+Use the standard NixOS services.github-runners module for two persistent registrations,
+mimir-waypoint for fast checks and mimir-waypoint-full for full qualification, scoped
+to https://github.com/Waypoint-Interactive. Separate services keep the full suite from
+blocking the fast feedback queue. Its dedicated
 system user has Docker access for CI database/container tests. Limit the GitHub runner
 group to selected trusted repositories; labels are not an access-control boundary.
-Use four CPUs/12 GiB RAM within the existing fleet's aggregate resource slice.
+Use four CPUs per service, with 8 GiB for fast checks and 10 GiB for full qualification
+inside the existing fleet's aggregate 20 GiB memory slice.
 
 Read the organization-capable token from /etc/idle-ci/github-token at runtime only.
 No token values or host network addresses belong in Git. Keep the ordinary firewall

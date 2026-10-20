@@ -11,7 +11,7 @@ let
     imports = [ ../hosts/mimir/waypoint-runner.nix ];
     users.groups.docker = { };
     systemd.slices.github-runners = { };
-    services.github-runners.waypoint-mimir = {
+    services.github-runners = lib.genAttrs [ "waypoint-mimir" "waypoint-mimir-full" ] (_: {
       tokenFile = lib.mkForce "/etc/test-runner-token";
       extraPackages = lib.mkForce [ ];
       package = pkgs.callPackage (
@@ -20,6 +20,8 @@ let
           set -eu
           case "$1" in
             configure)
+              temporary=$(mktemp)
+              rm "$temporary"
               mkdir -p "$RUNNER_ROOT/_diag"
               touch "$RUNNER_ROOT/.runner" "$RUNNER_ROOT/.credentials" "$RUNNER_ROOT/.credentials_rsaparams"
               ;;
@@ -28,7 +30,7 @@ let
           esac
         ''
       ) { };
-    };
+    });
     systemd.tmpfiles.rules = [ "f /etc/test-runner-token 0600 root root - test-registration-token" ];
   };
 in
@@ -36,6 +38,12 @@ pkgs.testers.runNixOSTest {
   name = "waypoint-runner-workspace";
   nodes = {
     fixed = common;
+    readonly = { lib, ... }: {
+      imports = [ common ];
+      systemd.services.github-runner-waypoint-mimir.serviceConfig.ReadWritePaths = lib.mkForce [
+        "/var/lib/waypoint-runner-work"
+      ];
+    };
     broken = { lib, ... }: {
       imports = [ common ];
       services.github-runners.waypoint-mimir.workDir = lib.mkForce "/var/lib/github-runner/waypoint-mimir/work";
@@ -47,9 +55,12 @@ pkgs.testers.runNixOSTest {
   testScript = ''
     start_all()
     broken.wait_until_succeeds("journalctl -u github-runner-waypoint-mimir.service --no-pager | grep 226/NAMESPACE")
+    readonly.wait_until_succeeds("journalctl -u github-runner-waypoint-mimir.service --no-pager | grep 'Read-only file system'")
     fixed.wait_for_unit("github-runner-waypoint-mimir.service")
+    fixed.wait_for_unit("github-runner-waypoint-mimir-full.service")
     fixed.succeed("runuser -u waypoint-runner -- touch /var/lib/waypoint-runner-work/owned")
     fixed.succeed("test -f /var/lib/github-runner/waypoint-mimir/.runner")
+    fixed.succeed("runuser -u waypoint-runner-full -- touch /var/lib/waypoint-runner-full-work/owned")
     fixed.succeed("systemctl stop github-runner-waypoint-mimir.service")
     fixed.succeed("rm /var/lib/github-runner/waypoint-mimir/.nixos-current-config.json")
     fixed.succeed("systemctl start github-runner-waypoint-mimir.service")

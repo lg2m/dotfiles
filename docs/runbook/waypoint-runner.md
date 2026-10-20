@@ -1,9 +1,10 @@
 # Persistent Waypoint runner on Mimir
 
-Mimir registers one persistent runner with the Waypoint-Interactive organization.
-Its GitHub name is mimir-waypoint; its systemd unit is
-`github-runner-waypoint-mimir.service`. It remains online and displays Idle between
-jobs. The existing veyr-lang runner services and tokens are unchanged.
+Mimir registers two persistent runners with the Waypoint-Interactive organization.
+The fast runner is mimir-waypoint, unit github-runner-waypoint-mimir.service, label
+waypoint-trusted (four CPUs/8 GiB). The full runner is mimir-waypoint-full, unit
+github-runner-waypoint-mimir-full.service, label waypoint-full (four CPUs/10 GiB).
+Both remain online and display Idle between jobs. The existing veyr-lang runner services and tokens are unchanged.
 
 ## Token and repository access
 
@@ -26,8 +27,9 @@ access. It is for reviewed, trusted workloads only; a separate Linux account and
 systemd hardening do not make it a sandbox for malicious code. No deployment or
 production credentials are supplied.
 
-The service is one job at a time, bounded to four CPUs and 12 GiB RAM, sharing the
-existing fleet's 20 GiB aggregate memory limit. Monitor concurrent fleet usage.
+Each service handles one job at a time. Their 18 GiB combined hard limit fits inside
+the existing fleet's 20 GiB cap; monitor concurrent veyr-lang usage as well. Separate
+services prevent a long full validation job from blocking the fast PR queue.
 Registration state persists under /var/lib/github-runner/waypoint-mimir; the separate
 workspace is /var/lib/waypoint-runner-work, created by systemd StateDirectory before
 startup namespaces are prepared. Registration-state cleanup cannot delete it;
@@ -66,7 +68,8 @@ backend change. The earlier disposable-controller proposal is superseded.
 
 ## Jobs and maintenance
 
-Workflows select `[self-hosted, Linux, X64, waypoint-trusted]`. Registering a runner
+Fast workflows select [self-hosted, Linux, X64, waypoint-trusted]; full qualification
+selects [self-hosted, Linux, X64, waypoint-full]. Registering a runner
 does not itself change a workflow that still selects ubuntu-24.04. Keep that wiring
 and its actual verification results in the application repository. A running service
 alone does not prove that checkout, native Node actions, Docker or full CI passes.
@@ -100,3 +103,16 @@ nix-build --no-out-link tests/waypoint-runner-workspace.nix
 ```
 
 Live organization registration remains a separate acceptance check.
+
+The runner uses the shared /tmp and /var/tmp for Docker bind-path consistency.
+ProtectSystem remains strict, with only the workspace/state and these temporary
+paths writable. Disabling PrivateTmp without explicitly allowing those paths makes
+nix develop fail with a read-only-filesystem error. The VM regression includes
+that broken configuration and verifies temporary-file creation in the fixed service.
+
+Fast PR checks should report stage timings and target 1–3 minutes warm, with a
+five-minute execution budget. Full qualification is requested at merge readiness
+using the full-ci PR label (or manual dispatch after that workflow reaches main).
+Keep the label on during finalization so new commits get fresh full evidence. Both
+verify and verify-full must succeed on the current head before merge. A skipped full
+job does not qualify. See the application CI runbook for the authoritative policy.
