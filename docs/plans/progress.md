@@ -80,3 +80,12 @@ blocks) is identical, checked with a semantic snapshot of each host.
   template verified to evaluate for aarch64-darwin, incl. HM and sops.
   sops path verified end-to-end on thor with a throwaway secrets file (eval
   only: secret paths, NM env file, hashedPasswordFile, ssh key symlinks).
+
+## Waypoint organization runner (2026-10-20)
+
+Configured one persistent mimir-waypoint runner using the standard NixOS module.
+Existing veyr-lang runners, firewall backend and lockfile inputs are unchanged.
+The token remains a protected local file. Host activation, organization permission/
+runner-group verification and a real CI job remain pending. See the
+[decision](../adr/persistent-organization-runner.md) and
+[runbook](../runbook/waypoint-runner.md).

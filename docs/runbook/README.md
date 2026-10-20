@@ -11,6 +11,7 @@ no arguments lists all recipes.
 | add a non-NixOS Linux machine (Home Manager only) | [add-host-home.md](add-host-home.md) |
 | add, edit or rotate secrets; enroll a host in sops | [secrets.md](secrets.md) |
 | deploy to mimir (or another host) from here | [remote-deploy.md](remote-deploy.md) |
+| operate the persistent Waypoint organization runner | [waypoint-runner.md](waypoint-runner.md) |
 | recover from a broken system | [recovery.md](recovery.md) |
 
 ## One-time setup on a workstation

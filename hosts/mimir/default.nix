@@ -10,6 +10,7 @@ _: {
 
     ./hardware.nix
     ./github-runners.nix
+    ./waypoint-runner.nix
   ];
 
   boot.kernelModules = [ "uinput" ];
