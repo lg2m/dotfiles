@@ -19,6 +19,7 @@ let
       ephemeral = false;
       replace = false;
       workDir = "/var/lib/${workspace}";
+      extraEnvironment.IDLE_CI_STATE_DIR = "/var/lib/${workspace}-ci-state";
       extraLabels = [
         "mimir"
         "nixos"
@@ -34,7 +35,10 @@ let
       ];
       serviceOverrides = {
         # Create the workspace before namespace setup, outside credential state.
-        StateDirectory = [ workspace ];
+        StateDirectory = [
+          workspace
+          "${workspace}-ci-state"
+        ];
         Slice = "github-runners.slice";
         CPUQuota = "400%";
         MemoryMax = memory;

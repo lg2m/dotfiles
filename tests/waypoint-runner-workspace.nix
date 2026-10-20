@@ -61,12 +61,18 @@ pkgs.testers.runNixOSTest {
     fixed.succeed("runuser -u waypoint-runner -- touch /var/lib/waypoint-runner-work/owned")
     fixed.succeed("test -f /var/lib/github-runner/waypoint-mimir/.runner")
     fixed.succeed("runuser -u waypoint-runner-full -- touch /var/lib/waypoint-runner-full-work/owned")
+    fixed.succeed("runuser -u waypoint-runner -- touch /var/lib/waypoint-runner-work-ci-state/receipt")
+    fixed.succeed("runuser -u waypoint-runner-full -- touch /var/lib/waypoint-runner-full-work-ci-state/receipt")
+    fixed.succeed("systemctl restart github-runner-waypoint-mimir-full.service")
+    fixed.wait_for_unit("github-runner-waypoint-mimir-full.service")
+    fixed.succeed("test -f /var/lib/waypoint-runner-full-work-ci-state/receipt")
     fixed.succeed("systemctl stop github-runner-waypoint-mimir.service")
     fixed.succeed("rm /var/lib/github-runner/waypoint-mimir/.nixos-current-config.json")
     fixed.succeed("systemctl start github-runner-waypoint-mimir.service")
     fixed.wait_for_unit("github-runner-waypoint-mimir.service")
     fixed.succeed("test -d /var/lib/waypoint-runner-work")
     fixed.succeed("test ! -e /var/lib/waypoint-runner-work/owned")
+    fixed.succeed("test -f /var/lib/waypoint-runner-work-ci-state/receipt")
     fixed.succeed("test -f /var/lib/github-runner/waypoint-mimir/.runner")
   '';
 }

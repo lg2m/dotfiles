@@ -1,6 +1,6 @@
 # Persistent organization runner on Mimir
 
-- Status: accepted configuration; activation and registration pending
+- Status: accepted configuration; both persistent services registered and connected
 - Date: 2026-10-20
 
 ## Context
@@ -18,7 +18,8 @@ mimir-waypoint for fast checks and mimir-waypoint-full for full qualification, s
 to https://github.com/Waypoint-Interactive. Separate services keep the full suite from
 blocking the fast feedback queue. Its dedicated
 system user has Docker access for CI database/container tests. Limit the GitHub runner
-group to selected trusted repositories; labels are not an access-control boundary.
+group to idle and its base-controlled ci.yml at refs/heads/main; labels and repository
+selection alone are not an access-control boundary.
 Use four CPUs per service, with 8 GiB for fast checks and 10 GiB for full qualification
 inside the existing fleet's aggregate 20 GiB memory slice.
 
@@ -37,4 +38,5 @@ here. Org credentials, repository access and actual job execution are separate g
 Persistent workspaces and host Docker access mean all admitted workflow writers are
 trusted with this machine. This is not an isolation boundary for untrusted PR code;
 use separate isolated runners for those jobs. No production deployment credentials
-are supplied. See the [runbook](../runbook/waypoint-runner.md).
+are supplied. Separate persistent CI state directories retain ownership receipts
+across workspace cleaning and runner restart. See the [runbook](../runbook/waypoint-runner.md).

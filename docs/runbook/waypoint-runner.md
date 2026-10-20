@@ -20,9 +20,12 @@ expire after one hour and must be refreshed if later reconfiguration needs one.
 An unexpired fine-grained token is simpler for future unattended re-registration.
 
 In organization Settings → Actions → Runner groups, limit this runner's group to
-selected trusted repositories, initially Idle. Confirm the actual policy before
-activation; labels are selection hints, not authorization. Restrict public/fork PR
-execution. This host runner has Docker access, which is effectively host-root
+selected repositories: idle only, in the waypoint-ci group. Set Workflow access to
+Selected workflows and allow exactly
+Waypoint-Interactive/idle/.github/workflows/ci.yml@refs/heads/main (heads is plural).
+Move both runners out of Default. The owner confirmed this policy saved on 2026-10-20.
+This external workflow restriction prevents PR-authored workflows from selecting Mimir;
+repository selection and labels alone cannot do that. This host runner has Docker access, which is effectively host-root
 access. It is for reviewed, trusted workloads only; a separate Linux account and
 systemd hardening do not make it a sandbox for malicious code. No deployment or
 production credentials are supplied.
@@ -34,6 +37,13 @@ Registration state persists under /var/lib/github-runner/waypoint-mimir; the sep
 workspace is /var/lib/waypoint-runner-work, created by systemd StateDirectory before
 startup namespaces are prepared. Registration-state cleanup cannot delete it;
 workspaces are not fresh VMs. The module cleans its work directory on service start.
+
+Each service also owns a separate mode0700 persistent StateDirectory,
+/var/lib/waypoint-runner-work-ci-state or /var/lib/waypoint-runner-full-work-ci-state,
+exported as IDLE_CI_STATE_DIR. It is outside both workspace cleaning and credential
+state cleanup. CI stores locked ownership receipts here so a killed job followed by
+runner restart cannot orphan its database. Never delete these directories to make a
+job pass; reconcile exact-owned resources using the application CI procedure.
 
 ## Build and activate
 
@@ -93,7 +103,7 @@ clears that state during reconfiguration, and systemd needs the workspace presen
 before setting up mount namespaces. An additional StateDirectory creates and owns
 the separate workspace before any startup command runs.
 
-The x86_64-linux flake check waypoint-runner-workspace boots two VMs: the old layout
+The x86_64-linux flake check waypoint-runner-workspace boots three VMs: the old layout
 reproduces 226/NAMESPACE; the corrected layout starts and restarts after registration
 state cleanup. It uses the real NixOS module and systemd with a stub Runner.Listener;
 no real token or GitHub API request is involved. Run it separately with:
@@ -102,7 +112,10 @@ no real token or GitHub API request is involved. Run it separately with:
 nix-build --no-out-link tests/waypoint-runner-workspace.nix
 ```
 
-Live organization registration remains a separate acceptance check.
+Both real runners have registered, connected and listened for jobs. Native fast CI
+passed in about two minutes; full qualification remains separate. The VM regression
+also proves persistent CI receipts survive fast/full service restart while ordinary
+workspace files are cleared.
 
 The runner uses the shared /tmp and /var/tmp for Docker bind-path consistency.
 ProtectSystem remains strict, with only the workspace/state and these temporary
@@ -112,7 +125,24 @@ that broken configuration and verifies temporary-file creation in the fixed serv
 
 Fast PR checks should report stage timings and target 1–3 minutes warm, with a
 five-minute execution budget. Full qualification is requested at merge readiness
-using the full-ci PR label (or manual dispatch after that workflow reaches main).
+using the full-ci PR label. Manual dispatch is branch diagnostics only.
 Keep the label on during finalization so new commits get fresh full evidence. Both
 verify and verify-full must succeed on the current head before merge. A skipped full
 job does not qualify. See the application CI runbook for the authoritative policy.
+
+## Durable CI state activation
+
+The 2026-10-20 follow-up adds persistent CI state outside workDir. Pure flake
+checks, Nix formatting/deadnix and the real three-VM regression pass, including
+both services preserving a receipt across restart while workspace files disappear.
+The normal host closure is prebuilt at ~/.local/share/idle-ci/mimir-durable-ci-state;
+no Codex-retention override is used. Activate and persist it as owner:
+
+```sh
+sudo nix-env --profile /nix/var/nix/profiles/system --set ~/.local/share/idle-ci/mimir-durable-ci-state
+sudo ~/.local/share/idle-ci/mimir-durable-ci-state/bin/switch-to-configuration switch
+```
+
+Runner registration options and token paths are unchanged. No existing organization
+runner is replaced or re-registered by this state-only change. Check both services
+and GitHub Idle status after activation. Physical host reboot remains separate evidence.
