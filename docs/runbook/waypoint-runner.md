@@ -28,7 +28,9 @@ production credentials are supplied.
 
 The service is one job at a time, bounded to four CPUs and 12 GiB RAM, sharing the
 existing fleet's 20 GiB aggregate memory limit. Monitor concurrent fleet usage.
-State and workspace are persistent under /var/lib/github-runner/waypoint-mimir;
+Registration state persists under /var/lib/github-runner/waypoint-mimir; the separate
+workspace is /var/lib/waypoint-runner-work, created by systemd StateDirectory before
+startup namespaces are prepared. Registration-state cleanup cannot delete it;
 workspaces are not fresh VMs. The module cleans its work directory on service start.
 
 ## Build and activate
@@ -80,3 +82,21 @@ Useful pages:
 - https://github.com/organizations/Waypoint-Interactive/settings/actions/runners
 - https://github.com/settings/personal-access-tokens
 - https://docs.github.com/en/actions/how-tos/manage-runners/self-hosted-runners/add-runners
+
+## Workspace startup regression
+
+The workspace must not be nested inside registration state. The upstream module
+clears that state during reconfiguration, and systemd needs the workspace present
+before setting up mount namespaces. An additional StateDirectory creates and owns
+the separate workspace before any startup command runs.
+
+The x86_64-linux flake check waypoint-runner-workspace boots two VMs: the old layout
+reproduces 226/NAMESPACE; the corrected layout starts and restarts after registration
+state cleanup. It uses the real NixOS module and systemd with a stub Runner.Listener;
+no real token or GitHub API request is involved. Run it separately with:
+
+```sh
+nix-build --no-out-link tests/waypoint-runner-workspace.nix
+```
+
+Live organization registration remains a separate acceptance check.

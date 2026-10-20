@@ -18,7 +18,7 @@
     replace = false;
     user = "waypoint-runner";
     group = "waypoint-runner";
-    workDir = "/var/lib/github-runner/waypoint-mimir/work";
+    workDir = "/var/lib/waypoint-runner-work";
     extraLabels = [
       "mimir"
       "nixos"
@@ -33,6 +33,8 @@
       nodejs_24
     ];
     serviceOverrides = {
+      # Create the workspace before namespace setup; keep it outside credential state.
+      StateDirectory = [ "waypoint-runner-work" ];
       Slice = "github-runners.slice";
       CPUQuota = "400%";
       MemoryMax = "12G";

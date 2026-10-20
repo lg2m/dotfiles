@@ -3,7 +3,7 @@
 { self, lib, ... }:
 {
   perSystem =
-    { system, ... }:
+    { system, pkgs, ... }:
     let
       forSystem = lib.filterAttrs (_: drv: drv.system == system);
 
@@ -20,6 +20,10 @@
       ) (self.homeConfigurations or { });
     in
     {
-      checks = forSystem (nixos // darwin // home);
+      checks =
+        forSystem (nixos // darwin // home)
+        // lib.optionalAttrs (system == "x86_64-linux") {
+          waypoint-runner-workspace = import ../tests/waypoint-runner-workspace.nix { inherit pkgs; };
+        };
     };
 }
