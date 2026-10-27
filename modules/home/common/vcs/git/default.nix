@@ -13,6 +13,9 @@ in
   options.my.vcs.git.enable = lib.mkEnableOption "Git version control configuration";
 
   config = lib.mkIf cfg.enable {
+    # Replace the hand-written ignore file that predates programs.git.ignores.
+    xdg.configFile."git/ignore".force = true;
+
     home.packages = with pkgs; [
       difftastic
     ];
@@ -26,6 +29,13 @@ in
           contents.user.email = email;
         }) id.gitIncludes;
         lfs.enable = true;
+        # Per-machine agent settings that may hold credentials.
+        ignores = [
+          "**/.claude/settings.local.json"
+          ".opencode/opencode.json"
+          ".opencode/opencode.jsonc"
+          ".qq/config.ron"
+        ];
         settings = {
           "difftool \"difftastic\"".cmd =
             "difft --color=auto --background=dark --width=200 \"$LOCAL\" \"$REMOTE\"";

@@ -34,9 +34,26 @@ in
         };
         diffs.view = "auto";
       };
+      # The only global config. Project-specific settings (providers, keys,
+      # models) go in each repo's .opencode/opencode.json, which is ignored
+      # globally by modules/home/common/vcs/git.
       settings = {
-        autoshare = false;
-        autoupdate = false;
+        # Nix pins the binary and plugin versions.
+        update = "disable";
+        share = "disabled";
+        formatter = true;
+        permissions = [
+          {
+            action = "shell";
+            resource = "rm -rf *";
+            effect = "ask";
+          }
+        ];
+        experimental = {
+          background_compaction = true;
+          subagent_depth = 2;
+          todo = true;
+        };
         plugins = [
           "opencode-wakatime@1.4.0"
           # Keep in step with pkgs/by-name/plannotator.
