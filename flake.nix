@@ -22,10 +22,17 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Only consumed by herdr; tracked here so its toolchain stays current.
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # Third-party packages (exposed via overlays/default.nix)
     herdr = {
-      url = "github:ogulcancelik/herdr/v0.7.0";
+      url = "github:herdrdev/herdr/v0.9.5";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.rust-overlay.follows = "rust-overlay";
     };
     codex-desktop-linux = {
       url = "github:ilysenko/codex-desktop-linux";

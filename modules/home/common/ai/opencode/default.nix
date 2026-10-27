@@ -24,21 +24,23 @@ in
         security-review = ./agent/security-review.md;
       };
       commands = ./command;
-      tui = {
-        theme = "rose-pine";
-        scroll_speed = 3;
-        scroll_acceleration = {
-          enable = true;
-        };
-        diff_style = "auto";
+      # OpenCode 2 terminal settings (cli.json); replaces the v1 tui.json.
+      cli = {
+        theme.name = "rose-pine";
         mouse = true;
+        scroll = {
+          speed = 3;
+          acceleration = true;
+        };
+        diffs.view = "auto";
       };
       settings = {
         autoshare = false;
         autoupdate = false;
-        plugin = [
-          "opencode-wakatime"
-          "@plannotator/opencode"
+        plugins = [
+          "opencode-wakatime@1.4.0"
+          # Keep in step with pkgs/by-name/plannotator.
+          "@plannotator/opencode@0.28.33"
         ];
       };
     };

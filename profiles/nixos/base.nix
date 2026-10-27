@@ -19,8 +19,6 @@
 
   boot = {
     kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
-    # Required for our LUKS/initrd setup; without it the kernel panics.
-    initrd.systemd.enable = lib.mkDefault true;
     kernel.sysctl = {
       # CAKE reduces bufferbloat and latency.
       "net.core.default_qdisc" = lib.mkDefault "cake";

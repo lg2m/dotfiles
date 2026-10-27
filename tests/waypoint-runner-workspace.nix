@@ -15,7 +15,7 @@ let
       tokenFile = lib.mkForce "/etc/test-runner-token";
       extraPackages = lib.mkForce [ ];
       package = pkgs.callPackage (
-        { ... }:
+        _:
         pkgs.writeShellScriptBin "Runner.Listener" ''
           set -eu
           case "$1" in

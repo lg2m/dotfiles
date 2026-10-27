@@ -21,10 +21,9 @@ in
     xdg.portal = {
       enable = true;
       xdgOpenUsePortal = true;
-      extraPortals = with pkgs; [
-        xdg-desktop-portal-hyprland
-        xdg-desktop-portal-gtk
-      ];
+      # programs.hyprland already adds its matching portalPackage; adding
+      # pkgs.xdg-desktop-portal-hyprland too collides in user-units.
+      extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
       config = {
         common.default = [
           "hyprland"

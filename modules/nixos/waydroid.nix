@@ -34,7 +34,28 @@ in
   config = lib.mkIf cfg.enable {
     # Sets up binder config, LXC, the waydroid-container service, psi=1 and
     # trusts the waydroid0 bridge in the firewall.
-    virtualisation.waydroid.enable = true;
+    virtualisation.waydroid = {
+      enable = true;
+      # Always use the nft backend. The default (iptables) variant prefers
+      # `iptables-legacy`, which fails on kernels built without
+      # NETFILTER_XTABLES_LEGACY (linuxPackages_latest), so `waydroid-net.sh start`
+      # aborts and the session never comes up. nft works with both firewall backends.
+      package = pkgs.waydroid-nftables;
+    };
+
+    # Docker sets the iptables FORWARD policy to DROP. In nftables every base
+    # chain must accept a packet, so Waydroid's own `inet lxc forward` accept
+    # isn't enough: let the bridge through the iptables FORWARD chain too.
+    networking.firewall = lib.mkIf (!config.networking.nftables.enable) {
+      extraCommands = ''
+        iptables -w -I FORWARD -i waydroid0 -j ACCEPT
+        iptables -w -I FORWARD -o waydroid0 -j ACCEPT
+      '';
+      extraStopCommands = ''
+        iptables -w -D FORWARD -i waydroid0 -j ACCEPT 2>/dev/null || true
+        iptables -w -D FORWARD -o waydroid0 -j ACCEPT 2>/dev/null || true
+      '';
+    };
 
     environment.systemPackages = lib.optionals cfg.helper.enable [ pkgs.waydroid-helper ];
 

@@ -7,24 +7,24 @@
 }:
 
 let
-  version = "0.28.21";
+  version = "0.28.33";
 
   sources = {
     x86_64-linux = fetchurl {
       url = "https://github.com/backnotprop/plannotator/releases/download/v${version}/plannotator-linux-x64";
-      hash = "sha256-Gpg3q+4lP67R668BYnfBQEHZH6MgiIc1LeU6wo78SUo=";
+      hash = "sha256-qSKYdGmHQyEExg5TIcmVsC5GKAnNVZb/Sx+qbdZhNkg=";
     };
     aarch64-linux = fetchurl {
       url = "https://github.com/backnotprop/plannotator/releases/download/v${version}/plannotator-linux-arm64";
-      hash = "sha256-xzvqEBux5sN95KZAX4yRYlTYBvqwWXchNBuZCBdekUY=";
+      hash = "sha256-fAgqODVufeNtBjnqz8izrKIxtdIcXwZCPK2eErwV/xM=";
     };
     aarch64-darwin = fetchurl {
       url = "https://github.com/backnotprop/plannotator/releases/download/v${version}/plannotator-darwin-arm64";
-      hash = "sha256-aq3XqlUvf4ZDSAEVvS/UHClD1/89utxMVy833dytoEw=";
+      hash = "sha256-C9zdlV2cPCMiHl1T5EFCw25y6YcYtcqaeOQb9URgUBg=";
     };
     x86_64-darwin = fetchurl {
       url = "https://github.com/backnotprop/plannotator/releases/download/v${version}/plannotator-darwin-x64";
-      hash = "sha256-TMTB6eP/m8+Us2BluNlZr5nYQjAAWarfITwZUSonMQU=";
+      hash = "sha256-PruBf8B7jbbugsa7jf0OVigTDvLjhUZepES2l5xoXEI=";
     };
   };
 in

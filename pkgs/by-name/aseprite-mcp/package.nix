@@ -4,29 +4,29 @@
   python3Packages,
   aseprite,
 }:
-# Upstream imports FastMCP, which was removed in MCP SDK 2.x.
-assert lib.versionOlder python3Packages.mcp.version "2";
 python3Packages.buildPythonApplication {
   pname = "aseprite-mcp";
-  version = "0.9.0";
+  version = "0.10.0";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "MalloyTheDev";
     repo = "aseprite-mcp";
-    tag = "v0.9.0";
-    hash = "sha256-yhLK++B5JXX2NN6N8emWrqXamGM5VAcjHLarUuvYkJE=";
+    tag = "v0.10.0";
+    hash = "sha256-qhOejEYBrsN6YnUX14URG5oeil2gcXdOgX4qks/jRl4=";
   };
 
   build-system = [ python3Packages.hatchling ];
   dependencies = with python3Packages; [
     mcp
     pillow
+    pydantic
   ];
-  postPatch = ''
-    substituteInPlace pyproject.toml --replace-fail 'mcp[cli]>=1.4.0' 'mcp[cli]>=1.4.0,<2'
-  '';
-  makeWrapperArgs = [ "--set ASEPRITE_PATH ${lib.getExe aseprite}" ];
+  makeWrapperArgs = [
+    "--set"
+    "ASEPRITE_PATH"
+    (lib.getExe aseprite)
+  ];
   pythonImportsCheck = [ "aseprite_mcp.server" ];
   nativeCheckInputs = with python3Packages; [
     pytestCheckHook
