@@ -9,7 +9,6 @@ let
 in
 {
   options.my.ai.openai = {
-    # pkgs.codex is pinned ahead of nixpkgs in pkgs/by-name/codex.
     codex.enable = lib.mkEnableOption "OpenAI Codex CLI coding assistant";
 
     # Unofficial repackaging of OpenAI's signed Linux ChatGPT/Codex desktop app
