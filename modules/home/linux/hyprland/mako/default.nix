@@ -20,10 +20,6 @@ in
 
     xdg.configFile."mako/config".source = ./config;
 
-    wayland.windowManager.hyprland.settings = {
-      "exec-once" = [
-        "mako"
-      ];
-    };
+    my.hyprland.startup = [ "mako" ];
   };
 }

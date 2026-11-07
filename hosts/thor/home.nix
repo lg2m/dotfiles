@@ -34,7 +34,14 @@
     };
 
     hyprland = {
-      monitors = [ ",5120x1440@239.76,auto,1" ];
+      monitors = [
+        {
+          output = "";
+          mode = "5120x1440@239.76";
+          position = "auto";
+          scale = 1;
+        }
+      ];
       startup = [ "goxlr-daemon" ];
       waydroid.enable = true;
     };

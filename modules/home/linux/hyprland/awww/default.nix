@@ -83,11 +83,9 @@ in
 
     xdg.configFile."hypr/wallpapers".source = wallpapersDir;
 
-    wayland.windowManager.hyprland.settings = {
-      "exec-once" = [
-        "${pkgs.awww}/bin/awww-daemon --no-cache"
-        "${cycleScript}/bin/awww-wallpaper-cycle"
-      ];
-    };
+    my.hyprland.startup = [
+      "${pkgs.awww}/bin/awww-daemon --no-cache"
+      "${cycleScript}/bin/awww-wallpaper-cycle"
+    ];
   };
 }

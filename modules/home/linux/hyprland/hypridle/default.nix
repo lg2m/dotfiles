@@ -20,10 +20,6 @@ in
 
     xdg.configFile."hypr/hypridle.conf".source = ./hypridle.conf;
 
-    wayland.windowManager.hyprland.settings = {
-      "exec-once" = [
-        "hypridle"
-      ];
-    };
+    my.hyprland.startup = [ "hypridle" ];
   };
 }

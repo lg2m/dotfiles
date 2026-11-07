@@ -33,14 +33,34 @@ Switching a host's desktop means changing two imports:
 If a setting would make sense on another Hyprland machine, it belongs in the
 module or profile, not the host.
 
+### Config format (Lua)
+
+Hyprland 0.57 removed hyprlang (`hyprland.conf`); it only reads
+`~/.config/hypr/hyprland.lua`. Home Manager generates that file
+(`configType = "lua"`). Modules never write raw Hyprland syntax; they append
+structured data to `my.hyprland.*`, and `base.nix` renders it:
+
+| Option | Renders to |
+|--------|-----------|
+| `binds` (`{ keys; exec \| dispatcher; execRules; flags; }`) | `hl.bind(keys, hl.dsp.exec_cmd(...) \| <dispatcher>, flags)` |
+| `startup` | `hl.exec_cmd` inside `hl.on("hyprland.start", ...)` |
+| `monitors` / `windowRules` / `workspaceRules` | `hl.monitor` / `hl.window_rule` / `hl.workspace_rule` tables |
+
+`hyprctl dispatch` now takes a Lua dispatcher, e.g.
+`hyprctl dispatch 'hl.dsp.focus({ workspace = 3 })'`. The legacy
+`hyprctl dispatch workspace 3` form errors.
+
+The `hyprland-<host>-<user>` flake check runs `Hyprland --verify-config` on
+the generated file, so `just check` fails if the compositor would reject it.
+
 ### Per-host overrides (HM)
 
 ```nix
 # hosts/thor/home.nix
 my.hyprland = {
-  monitors = [ ",5120x1440@239.76,auto,1" ];
+  monitors = [ { output = ""; mode = "5120x1440@239.76"; position = "auto"; scale = 1; } ];
   startup = [ "goxlr-daemon" ];
-  # extraBinds, workspaceRules, apps.{terminal,browser,...}
+  # binds, windowRules, workspaceRules, apps.{terminal,browser,...}
 };
 ```
 
@@ -75,6 +95,7 @@ built yuck (`nix build .#nixosConfigurations.thor.config.home-manager.users.zmey
 ```sh
 nix eval .#nixosConfigurations.thor.config.programs.hyprland.enable
 nix eval .#nixosConfigurations.thor.config.home-manager.users.zmeyer.wayland.windowManager.hyprland.enable
+nix build .#checks.x86_64-linux.hyprland-thor-zmeyer   # Hyprland parses the generated lua
 just test          # activate without a boot entry
 just switch
 ```

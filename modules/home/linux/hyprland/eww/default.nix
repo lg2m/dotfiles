@@ -112,11 +112,15 @@ in
       Install.WantedBy = [ "graphical-session.target" ];
     };
 
-    wayland.windowManager.hyprland.settings = {
-      bind = [
-        "$mod SHIFT, B, exec, systemctl --user restart eww"
-        "$mod, N, exec, makoctl mode -t do-not-disturb"
-      ];
-    };
+    my.hyprland.binds = [
+      {
+        keys = "${hyprCfg.mod} + SHIFT + B";
+        exec = "systemctl --user restart eww";
+      }
+      {
+        keys = "${hyprCfg.mod} + N";
+        exec = "makoctl mode -t do-not-disturb";
+      }
+    ];
   };
 }

@@ -26,12 +26,19 @@ in
       pkgs.libnotify
     ];
 
-    wayland.windowManager.hyprland.settings = {
-      bind = [
-        "$mod SHIFT, S, exec, hyprshot -m region"
-        "$mod CTRL, S, exec, hyprshot -m window"
-        "$mod ALT, S, exec, hyprshot -m output"
-      ];
-    };
+    my.hyprland.binds = [
+      {
+        keys = "${hyprCfg.mod} + SHIFT + S";
+        exec = "hyprshot -m region";
+      }
+      {
+        keys = "${hyprCfg.mod} + CTRL + S";
+        exec = "hyprshot -m window";
+      }
+      {
+        keys = "${hyprCfg.mod} + ALT + S";
+        exec = "hyprshot -m output";
+      }
+    ];
   };
 }

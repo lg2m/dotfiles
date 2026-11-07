@@ -20,10 +20,11 @@ in
 
     xdg.configFile."yofi/yofi.config".source = ./yofi.config;
 
-    wayland.windowManager.hyprland.settings = {
-      bind = [
-        "$mod, SPACE, exec, yofi"
-      ];
-    };
+    my.hyprland.binds = [
+      {
+        keys = "${hyprCfg.mod} + SPACE";
+        exec = "yofi";
+      }
+    ];
   };
 }

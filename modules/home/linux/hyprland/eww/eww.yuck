@@ -26,12 +26,12 @@
 
 (defwidget workspaces []
   (eventbox
-    :onscroll "hyprctl dispatch workspace $([ {} = up ] && echo e-1 || echo e+1)"
+    :onscroll "hyprctl dispatch \"hl.dsp.focus({ workspace = [[$([ {} = up ] && echo e-1 || echo e+1)]] })\""
     (box :class "workspaces" :space-evenly false :spacing 2
       (for ws in {hypr.workspaces}
         (button
           :class "ws ${ws.active ? 'active' : ''}"
-          :onclick "hyprctl dispatch workspace ${ws.id}"
+          :onclick "hyprctl dispatch 'hl.dsp.focus({ workspace = ${ws.id} })'"
           :tooltip "${ws.windows} window${ws.windows == 1 ? '' : 's'}"
           "${ws.id}")))))
 
@@ -168,6 +168,6 @@
     (power-item :icon "󰌾" :label "Lock"      :cmd "loginctl lock-session")
     (power-item :icon "󰑓" :label "Reload Hyprland" :cmd "hyprctl reload")
     (power-item :icon "󰤄" :label "Suspend"   :cmd "systemctl suspend")
-    (power-item :icon "󰍃" :label "Log out"   :cmd "hyprctl dispatch exit" :class "danger")
+    (power-item :icon "󰍃" :label "Log out"   :cmd "hyprctl dispatch 'hl.dsp.exit()'" :class "danger")
     (power-item :icon "󰜉" :label "Reboot"    :cmd "systemctl reboot" :class "danger")
     (power-item :icon "󰐥" :label "Shut down" :cmd "systemctl poweroff" :class "danger")))

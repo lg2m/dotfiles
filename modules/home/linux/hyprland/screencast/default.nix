@@ -23,7 +23,7 @@ let
     runtimeInputs = [
       pkgs.wf-recorder
       pkgs.slurp
-      pkgs.hyprland # provides hyprctl
+      config.wayland.windowManager.hyprland.finalPackage # provides hyprctl
       pkgs.libnotify
       pkgs.coreutils
       pkgs.procps # pkill/pgrep
@@ -84,11 +84,15 @@ in
       pkgs.libnotify
     ];
 
-    wayland.windowManager.hyprland.settings = {
-      bind = [
-        "$mod SHIFT, R, exec, screencast region"
-        "$mod ALT, R, exec, screencast output"
-      ];
-    };
+    my.hyprland.binds = [
+      {
+        keys = "${hyprCfg.mod} + SHIFT + R";
+        exec = "screencast region";
+      }
+      {
+        keys = "${hyprCfg.mod} + ALT + R";
+        exec = "screencast output";
+      }
+    ];
   };
 }

@@ -21,10 +21,11 @@ in
     xdg.configFile."hypr/hyprlock.conf".source = ./hyprlock.conf;
     xdg.configFile."hypr/hyprlock-theme.conf".source = ./hyprlock-theme.conf;
 
-    wayland.windowManager.hyprland.settings = {
-      bind = [
-        "$mod SHIFT, X, exec, hyprlock"
-      ];
-    };
+    my.hyprland.binds = [
+      {
+        keys = "${hyprCfg.mod} + SHIFT + X";
+        exec = "hyprlock";
+      }
+    ];
   };
 }

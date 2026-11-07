@@ -25,20 +25,40 @@ in
   };
 
   config = lib.mkIf (hyprCfg.enable && cfg.enable) {
-    wayland.windowManager.hyprland.settings = {
-      bind = [
-        "$mod, A, exec, ${
-          lib.optionalString (cfg.workspace != null) "[workspace ${toString cfg.workspace}] "
-        }waydroid show-full-ui"
-        "$mod SHIFT, A, exec, waydroid session stop"
+    my.hyprland = {
+      binds = [
+        {
+          keys = "${hyprCfg.mod} + A";
+          exec = "waydroid show-full-ui";
+          execRules = lib.optionalAttrs (cfg.workspace != null) {
+            workspace = toString cfg.workspace;
+          };
+        }
+        {
+          keys = "${hyprCfg.mod} + SHIFT + A";
+          exec = "waydroid session stop";
+        }
       ];
 
-      windowrule = [
+      windowRules = [
         # Full UI (class "Waydroid"): don't idle-lock mid-game.
-        "match:class ^(Waydroid)$, idle_inhibit always${lib.optionalString cfg.fullscreen ", fullscreen on"}"
+        (
+          {
+            name = "waydroid-full-ui";
+            match.class = "^(Waydroid)$";
+            idle_inhibit = "always";
+          }
+          // lib.optionalAttrs cfg.fullscreen { fullscreen = true; }
+        )
         # Multi-window mode (`waydroid prop set persist.waydroid.multi_windows true`)
         # names each app window "waydroid.<package>"; float them like phone windows.
-        "match:class ^(waydroid\\..*)$, float on, center on, idle_inhibit focus"
+        {
+          name = "waydroid-app-windows";
+          match.class = "^(waydroid\\..*)$";
+          float = true;
+          center = true;
+          idle_inhibit = "focus";
+        }
       ];
     };
   };

@@ -27,10 +27,11 @@ in
       "inode/directory" = [ "thunar.desktop" ];
     };
 
-    wayland.windowManager.hyprland.settings = {
-      bind = [
-        "$mod, E, exec, ${thunarExe}"
-      ];
-    };
+    my.hyprland.binds = [
+      {
+        keys = "${hyprCfg.mod} + E";
+        exec = thunarExe;
+      }
+    ];
   };
 }
