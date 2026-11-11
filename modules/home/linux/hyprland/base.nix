@@ -183,7 +183,7 @@ let
     }
     {
       keys = "${mod} + CTRL + R";
-      dispatcher = "hl.dsp.reload_config()";
+      exec = "hyprctl reload";
     }
     {
       keys = "${mod} + SHIFT + Q";
