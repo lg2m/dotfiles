@@ -25,6 +25,8 @@ in
       pulseaudio
       pavucontrol
       pamixer
+      # provides `pw-jack`; run JACK clients as `pw-jack <app>`
+      config.services.pipewire.package.jack
     ];
 
     security.rtkit.enable = true;
@@ -35,7 +37,6 @@ in
         alsa.enable = true;
         alsa.support32Bit = true;
         enable = true;
-        jack.enable = true;
         pulse.enable = true;
       };
     };
