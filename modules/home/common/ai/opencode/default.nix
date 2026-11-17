@@ -57,7 +57,7 @@ in
         plugins = [
           "opencode-wakatime@1.4.0"
           # Keep in step with pkgs/by-name/plannotator.
-          "@plannotator/opencode@0.28.48"
+          "@plannotator/opencode@0.28.67"
         ];
       };
     };
